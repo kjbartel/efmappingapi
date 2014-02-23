@@ -37,11 +37,11 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
         public DbSet<WorkerTPT> WorkerTpts { get; set; }
         public DbSet<ManagerTPT> ManagerTpts { get; set; }
-        /*
+        
         public DbSet<EmployeeTPH> EmployeeTphs { get; set; } 
         public DbSet<ManagerTPH> ManagerTphs { get; set; }
         public DbSet<AWorkerTPH> AWorkerTphs { get; set; }
-        */
+        
         public DbSet<ContractBase> ContractBases { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<ContractFixed> FixedContracts { get; set; }

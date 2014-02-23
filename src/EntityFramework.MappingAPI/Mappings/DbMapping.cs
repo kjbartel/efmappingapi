@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using EntityFramework.MappingAPI.Exceptions;
 using EntityFramework.MappingAPI.Extensions;
 using EntityFramework.MappingAPI.Mappers;
 
@@ -97,16 +98,47 @@ namespace EntityFramework.MappingAPI.Mappings
             // todo - order tables by hierarchy
             // if dbsets are defined in context. root table is not taken as first table.
 
-            foreach (var kvp in TypeMappings)
+            var typeMappings = TypeMappings;
+
+            int depth = 0;
+            while (true)
             {
-                var tableMapping = mapper.MapTable(kvp.Key, kvp.Value);
-                if (tableMapping == null)
+                if (depth > 100)
                 {
-                    continue;
+                    throw new Exception("Type mapping has reached unreasonable depth.");
                 }
 
-                tableMapping.DbMapping = this;
-                _tableMappings.Add(kvp.Key, tableMapping);
+                if (typeMappings.Count == 0)
+                {
+                    break;
+                }
+
+                var nextLevel = new Dictionary<string, EntityType>();
+
+                foreach (var kvp in typeMappings)
+                {
+                    TableMapping tableMapping;
+                    try
+                    {
+                        tableMapping = mapper.MapTable(kvp.Key, kvp.Value);
+                    }
+                    catch (ParentNotMappedYetException)
+                    {
+                        nextLevel.Add(kvp.Key, kvp.Value);
+                        continue;
+                    }
+
+                    if (tableMapping == null)
+                    {
+                        continue;
+                    }
+
+                    tableMapping.DbMapping = this;
+                    _tableMappings.Add(kvp.Key, tableMapping);
+                }
+
+                typeMappings = nextLevel;
+                depth++;
             }
 
             mapper.BindForeignKeys();

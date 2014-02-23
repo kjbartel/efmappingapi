@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using EntityFramework.MappingAPI.Exceptions;
 using EntityFramework.MappingAPI.Extensions;
 using EntityFramework.MappingAPI.Mappings;
 
@@ -217,11 +218,22 @@ namespace EntityFramework.MappingAPI.Mappers
                 return null;
             }
 
+            var isRoot = baseEdmType == edmItem;
+            if (!isRoot)
+            {
+                var parent = _tableMappings.Values.FirstOrDefault(x => x.EdmType == baseEdmType);
+                // parent table has not been mapped yet
+                if (parent == null)
+                {
+                    throw new ParentNotMappedYetException();
+                }
+            }
+
             string tableName = GetTableName(storageEntitySet);
             string schema = (string)storageEntitySet.MetadataProperties["Schema"].Value;
 
             var tableMapping = this.RegTable(typeFullName, tableName, schema);
-            tableMapping.IsRoot = baseEdmType == edmItem;
+            tableMapping.IsRoot = isRoot;
             tableMapping.EdmType = edmItem;
             tableMapping.ParentEdmType = tableMapping.IsRoot ? null : baseEdmType;
 
