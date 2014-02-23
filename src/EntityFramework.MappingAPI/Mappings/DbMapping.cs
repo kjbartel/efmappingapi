@@ -95,9 +95,6 @@ namespace EntityFramework.MappingAPI.Mappings
                 mapper = new DbFirstMapper(_metadataWorkspace, entityContainer);
             }
 
-            // todo - order tables by hierarchy
-            // if dbsets are defined in context. root table is not taken as first table.
-
             var typeMappings = TypeMappings;
 
             int depth = 0;
