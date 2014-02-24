@@ -14,8 +14,6 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         {
             using (var ctx = GetContext())
             {
-                InitializeContext();
-
                 var sw = new Stopwatch();
                 sw.Restart();
                 var dbmapping = ctx.Db();

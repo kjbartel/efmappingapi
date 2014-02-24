@@ -36,6 +36,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF5.0.0|AnyCPU'">
     <OutputPath>bin\NET45_EF5.0.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF5</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.0.0|AnyCPU'">
     <OutputPath>bin\NET45_EF6.0.0\</OutputPath>
@@ -119,16 +120,15 @@
     <Compile Include="Exceptions\ParentNotMappedYetException.cs" />
     <Compile Include="Extensions\MappingApiExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="IColumnMapping.cs" />
-    <Compile Include="IDbMapping.cs" />
-    <Compile Include="ITableMapping.cs" />
+    <Compile Include="IEntityMap.cs" />
+    <Compile Include="IPropertyMap.cs" />
     <Compile Include="Mappers\CodeFirstMapper.cs" />
     <Compile Include="Mappers\DbFirstMapper.cs" />
     <Compile Include="Mappers\MapperBase.cs" />
     <Compile Include="Mappers\TphData.cs" />
-    <Compile Include="Mappings\ColumnMapping.cs" />
     <Compile Include="Mappings\DbMapping.cs" />
-    <Compile Include="Mappings\TableMapping.cs" />
+    <Compile Include="Mappings\EntityMap.cs" />
+    <Compile Include="Mappings\PropertyMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

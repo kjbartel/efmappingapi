@@ -37,7 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET40_EF4.1.10331|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\NET40_EF4.1.10331\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40;EF4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;EF4;EF4_1_10</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -118,7 +118,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET40_EF4.1.10311|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\NET40_EF4.1.10311\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40;EF4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;EF4;EF4_1_10311</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

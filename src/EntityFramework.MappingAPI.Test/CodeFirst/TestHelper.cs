@@ -42,8 +42,8 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
         public static IPropertyMap NavigationProperty(this IPropertyMap c, string navigationProperty)
         {
-            string message = string.Format("Property {0} navigation property should be '{1}', but was '{2}'", c.PropertyName, navigationProperty, c.NavigationProperty);
-            Assert.AreEqual(navigationProperty, c.NavigationProperty, message);
+            string message = string.Format("Property {0} navigation property should be '{1}', but was '{2}'", c.PropertyName, navigationProperty, c.NavigationPropertyName);
+            Assert.AreEqual(navigationProperty, c.NavigationPropertyName, message);
             return c;
         }
 

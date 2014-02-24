@@ -81,7 +81,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Foreign keys navigation propery name
         /// </summary>
-        public string NavigationProperty { get; internal set; }
+        public string NavigationPropertyName { get; internal set; }
 
         /// <summary>
         /// 
@@ -97,6 +97,11 @@ namespace EntityFramework.MappingAPI.Mappings
         /// Foreign key target column
         /// </summary>
         public IPropertyMap FkTargetColumn { get; internal set; }
+
+        /// <summary>
+        /// Foreign key navigation property
+        /// </summary>
+        public IPropertyMap NavigationProperty { get; internal set; }
 
         /// <summary>
         /// Edm property from storage entity set (SSpace).

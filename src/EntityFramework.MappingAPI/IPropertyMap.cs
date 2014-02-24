@@ -60,10 +60,27 @@ namespace EntityFramework.MappingAPI
         /// </summary>
         IEntityMap EntityMap { get; }
 
+        #region nav property
+
         /// <summary>
-        /// 
+        /// Is navigation property
         /// </summary>
         bool IsNavigationProperty { get; }
+
+        /// <summary>
+        /// Foreign key property name which is used for navigation property.
+        /// </summary>
+        string ForeignKeyPropertyName { get; }
+
+        /// <summary>
+        /// Foreign key property.
+        /// Available only for navigation properties.
+        /// </summary>
+        IPropertyMap ForeignKey { get; }
+
+        #endregion
+
+        #region fk property
 
         /// <summary>
         /// Is foreign key
@@ -73,12 +90,7 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Foreign keys navigation propery name
         /// </summary>
-        string NavigationProperty { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string ForeignKeyPropertyName { get; }
+        string NavigationPropertyName { get; }
 
         /// <summary>
         /// Foreign key target column
@@ -86,8 +98,10 @@ namespace EntityFramework.MappingAPI
         IPropertyMap FkTargetColumn { get; }
 
         /// <summary>
-        /// 
+        /// Foreign key navigation property
         /// </summary>
-        IPropertyMap ForeignKey { get; }
+        IPropertyMap NavigationProperty { get; }
+
+        #endregion
     }
 }

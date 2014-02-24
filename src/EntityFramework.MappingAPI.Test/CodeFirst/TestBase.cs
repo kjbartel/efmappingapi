@@ -9,8 +9,11 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
     [TestFixture]
     public abstract class TestBase
     {
+#if EF4_1_10311
+        protected const int NvarcharMax = 128;
+#else
         protected const int NvarcharMax = 1073741823;
-
+#endif
         [SetUp]
         public virtual void Setup()
         {

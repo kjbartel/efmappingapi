@@ -31,7 +31,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// Table mappings dictionary where key is entity type full name.
         /// </summary>
-        private readonly Dictionary<string, EntityMap> _tableMappings = new Dictionary<string, EntityMap>();
+        private readonly Dictionary<string, EntityMap> _entityMaps = new Dictionary<string, EntityMap>();
 
         /// <summary>
         /// Primary keys of tables.
@@ -185,18 +185,18 @@ namespace EntityFramework.MappingAPI.Mappers
         {
             var entityType = TryGetRefObjectType(typeFullName);
 
-            var tableMappingType = typeof (EntityMap<>);
-            var genericType = tableMappingType.MakeGenericType(entityType);
+            var entityMapType = typeof (EntityMap<>);
+            var genericType = entityMapType.MakeGenericType(entityType);
 
-            var tableMapping = (EntityMap)Activator.CreateInstance(genericType);
-            tableMapping.TypeFullName = typeFullName;
-            tableMapping.TableName = tableName;
-            tableMapping.Schema = schema;
-            tableMapping.Type = entityType;
+            var entityMap = (EntityMap)Activator.CreateInstance(genericType);
+            entityMap.TypeFullName = typeFullName;
+            entityMap.TableName = tableName;
+            entityMap.Schema = schema;
+            entityMap.Type = entityType;
 
-            _tableMappings.Add(typeFullName, tableMapping);
+            _entityMaps.Add(typeFullName, entityMap);
 
-            return tableMapping;
+            return entityMap;
         }
 
 
@@ -221,7 +221,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// </summary>
         /// <param name="typeFullName"></param>
         /// <param name="edmItem"></param>
-        public EntityMap MapTable(string typeFullName, EdmType edmItem)
+        public EntityMap MapEntity(string typeFullName, EdmType edmItem)
         {
             var identity = edmItem.FullName;
             if (!TphData.ContainsKey(identity))
@@ -250,7 +250,7 @@ namespace EntityFramework.MappingAPI.Mappers
             var isRoot = baseEdmType == edmItem;
             if (!isRoot)
             {
-                var parent = _tableMappings.Values.FirstOrDefault(x => x.EdmType == baseEdmType);
+                var parent = _entityMaps.Values.FirstOrDefault(x => x.EdmType == baseEdmType);
                 // parent table has not been mapped yet
                 if (parent == null)
                 {
@@ -261,7 +261,7 @@ namespace EntityFramework.MappingAPI.Mappers
             string tableName = GetTableName(storageEntitySet);
             string schema = (string)storageEntitySet.MetadataProperties["Schema"].Value;
 
-            var entityMap = this.RegEntity(typeFullName, tableName, schema);
+            var entityMap = RegEntity(typeFullName, tableName, schema);
             entityMap.IsRoot = isRoot;
             entityMap.EdmType = edmItem;
             entityMap.ParentEdmType = entityMap.IsRoot ? null : baseEdmType;
@@ -274,11 +274,12 @@ namespace EntityFramework.MappingAPI.Mappers
             int i = 0;
 
             var propertiesToMap = GetPropertiesToMap(entityMap, storageEntitySet.ElementType.Properties);
-            foreach (var prop in propertiesToMap)
+            foreach (var edmProperty in propertiesToMap)
             {
-                MapColumn(entityMap, prop, identity, ref i, ref prefix);
+                MapProperty(entityMap, edmProperty, ref i, ref prefix);
             }
 
+            // create navigation properties
             foreach (var navigationProperty in TphData[identity].NavProperties)
             {
                 var associationType = navigationProperty.RelationshipType as AssociationType;
@@ -294,7 +295,7 @@ namespace EntityFramework.MappingAPI.Mappers
 
                 if (propertyMap != null)
                 {
-                    propertyMap.NavigationProperty = navigationProperty.Name;
+                    propertyMap.NavigationPropertyName = navigationProperty.Name;
 
                     if (entityMap.Prop(navigationProperty.Name) == null)
                     {
@@ -302,15 +303,18 @@ namespace EntityFramework.MappingAPI.Mappers
                         navigationPropertyMap.IsNavigationProperty = true;
                         navigationPropertyMap.ForeignKeyPropertyName = propertyMap.PropertyName;
                         navigationPropertyMap.ForeignKey = propertyMap;
+
+                        propertyMap.NavigationProperty = navigationPropertyMap;
                     }
                 }
             }
 
+            // create discriminators
             foreach (var discriminator in TphData[identity].Discriminators)
             {
-                var column = entityMap.MapProperty(discriminator.Key, discriminator.Key);
-                column.DefaultValue = discriminator.Value;
-                column.IsDiscriminator = true;
+                var propertyMap = entityMap.MapProperty(discriminator.Key, discriminator.Key);
+                propertyMap.DefaultValue = discriminator.Value;
+                propertyMap.IsDiscriminator = true;
             }
 
             return entityMap;
@@ -339,7 +343,7 @@ namespace EntityFramework.MappingAPI.Mappers
 
             while (true)
             {
-                var parent = _tableMappings.Values.FirstOrDefault(x => x.EdmType == parentEdmType);
+                var parent = _entityMaps.Values.FirstOrDefault(x => x.EdmType == parentEdmType);
                 if (parent == null)
                 {
                     break;
@@ -347,7 +351,7 @@ namespace EntityFramework.MappingAPI.Mappers
 
                 include.AddRange(parent.Properties.Cast<PropertyMap>().Select(x => x.EdmProperty));
 
-                exclude.AddRange(_tableMappings.Values.Where(x => x.ParentEdmType == parentEdmType)
+                exclude.AddRange(_entityMaps.Values.Where(x => x.ParentEdmType == parentEdmType)
                     .SelectMany(x => x.Properties)
                     .Cast<PropertyMap>()
                     .Select(x => x.EdmProperty));
@@ -362,14 +366,14 @@ namespace EntityFramework.MappingAPI.Mappers
         /// 
         /// </summary>
         /// <param name="entityMap"></param>
-        /// <param name="prop"></param>
+        /// <param name="edmProperty"></param>
         /// <param name="i"></param>
         /// <param name="prefix"></param>
-        private void MapColumn(EntityMap entityMap, EdmProperty prop, string identity, ref int i, ref string prefix)
+        private void MapProperty(EntityMap entityMap, EdmProperty edmProperty, ref int i, ref string prefix)
         {
-            //var identity = tableMapping.EdmType.FullName;
+            var identity = entityMap.EdmType.FullName;
             var entityMembers = TphData[identity].Properties;
-            var columnName = prop.Name;
+            var columnName = edmProperty.Name;
 
             if (entityMembers.Length <= i)
             {
@@ -411,18 +415,18 @@ namespace EntityFramework.MappingAPI.Mappers
                 return;
             }
 
-            PropertyMap colMapping;
+            PropertyMap propertyMap;
             try
             {
-                colMapping = entityMap.MapProperty(propName, columnName);
-                colMapping.EdmProperty = prop;
-                colMapping.EdmMember = edmMember;
-                colMapping.IsNavigationProperty = edmMember is NavigationProperty;
-                colMapping.IsFk = colMapping.IsNavigationProperty || _fks.ContainsKey(edmMember);
-                if (colMapping.IsFk && _fks.ContainsKey(edmMember))
+                propertyMap = entityMap.MapProperty(propName, columnName);
+                propertyMap.EdmProperty = edmProperty;
+                propertyMap.EdmMember = edmMember;
+                propertyMap.IsNavigationProperty = edmMember is NavigationProperty;
+                propertyMap.IsFk = propertyMap.IsNavigationProperty || _fks.ContainsKey(edmMember);
+                if (propertyMap.IsFk && _fks.ContainsKey(edmMember))
                 {
-                    colMapping.FkTargetEdmMember = _fks[edmMember];
-                    entityMap.AddFk(colMapping);
+                    propertyMap.FkTargetEdmMember = _fks[edmMember];
+                    entityMap.AddFk(propertyMap);
                 }
             }
             catch (Exception ex)
@@ -438,35 +442,35 @@ namespace EntityFramework.MappingAPI.Mappers
 
             if (_pks[entityMap.TableName].Contains(propName))
             {
-                colMapping.IsPk = true;
-                entityMap.AddPk(colMapping);
+                propertyMap.IsPk = true;
+                entityMap.AddPk(propertyMap);
             }
 
-            foreach (var facet in prop.TypeUsage.Facets)
+            foreach (var facet in edmProperty.TypeUsage.Facets)
             {
                 switch (facet.Name)
                 {
                     case "Nullable":
-                        colMapping.Nullable = (bool)facet.Value;
+                        propertyMap.Nullable = (bool)facet.Value;
                         break;
                     case "DefaultValue":
-                        colMapping.DefaultValue = facet.Value;
+                        propertyMap.DefaultValue = facet.Value;
                         break;
                     case "StoreGeneratedPattern":
-                        colMapping.IsIdentity = (StoreGeneratedPattern)facet.Value == StoreGeneratedPattern.Identity;
-                        colMapping.Computed = (StoreGeneratedPattern)facet.Value == StoreGeneratedPattern.Computed;
+                        propertyMap.IsIdentity = (StoreGeneratedPattern)facet.Value == StoreGeneratedPattern.Identity;
+                        propertyMap.Computed = (StoreGeneratedPattern)facet.Value == StoreGeneratedPattern.Computed;
                         break;
                     case "MaxLength":
 
                         try
                         {
-                            colMapping.MaxLength = (int)facet.Value;
+                            propertyMap.MaxLength = (int)facet.Value;
                         }
                         catch (Exception)
                         {
                             var stringVal = facet.Value.ToString();
                             if (stringVal == "Max")
-                                colMapping.MaxLength = int.MaxValue;
+                                propertyMap.MaxLength = int.MaxValue;
                             else
                                 throw;
                         }
@@ -480,8 +484,8 @@ namespace EntityFramework.MappingAPI.Mappers
         /// </summary>
         public void BindForeignKeys()
         {
-            var fks = _tableMappings.Values.SelectMany(x => x.Fks);
-            var pks = _tableMappings.Values.SelectMany(x => x.Pks);
+            var fks = _entityMaps.Values.SelectMany(x => x.Fks);
+            var pks = _entityMaps.Values.SelectMany(x => x.Pks);
 
             // can't use ToDictionary, because tph tables share mappings
             var pkDict = new Dictionary<EdmMember, PropertyMap>();

@@ -117,7 +117,7 @@ namespace EntityFramework.MappingAPI.Mappings
                     EntityMap entityMap;
                     try
                     {
-                        entityMap = mapper.MapTable(kvp.Key, kvp.Value);
+                        entityMap = mapper.MapEntity(kvp.Key, kvp.Value);
                     }
                     catch (ParentNotMappedYetException)
                     {

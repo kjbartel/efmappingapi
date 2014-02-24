@@ -48,22 +48,17 @@ namespace EntityFramework.MappingAPI
         bool IsRoot { get; }
 
         /// <summary>
-        /// Column mappings for table
+        /// Mapped properties
         /// </summary>
         IPropertyMap[] Properties { get; }
 
         /// <summary>
-        /// Parent DbMapping
-        /// </summary>
-        //IDbMapping DbMapping { get; }
-
-        /// <summary>
-        /// Foreign key columns
+        /// Foreign key properties
         /// </summary>
         IPropertyMap[] Fks { get; }
 
         /// <summary>
-        /// Primary key columns
+        /// Primary key properties
         /// </summary>
         IPropertyMap[] Pks { get; }
 
