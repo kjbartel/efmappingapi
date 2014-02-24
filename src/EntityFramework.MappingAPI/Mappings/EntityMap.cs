@@ -12,9 +12,9 @@ using System.Reflection;
 
 namespace EntityFramework.MappingAPI.Mappings
 {
-    internal class TableMapping<T> : TableMapping, ITableMapping<T>
+    internal class EntityMap<T> : EntityMap, IEntityMap<T>
     {
-        public IColumnMapping Col<T1>(Expression<Func<T, T1>> predicate)
+        public IPropertyMap Prop<T1>(Expression<Func<T, T1>> predicate)
         {
             var predicateString = predicate.ToString();
             var i = predicateString.IndexOf('.');
@@ -26,11 +26,11 @@ namespace EntityFramework.MappingAPI.Mappings
     /// <summary>
     /// 
     /// </summary>
-    internal class TableMapping : ITableMapping
+    internal class EntityMap : IEntityMap
     {
-        private readonly Dictionary<string, IColumnMapping> _columnMappings = new Dictionary<string, IColumnMapping>();
-        private readonly List<IColumnMapping> _fks = new List<IColumnMapping>();
-        private readonly List<IColumnMapping> _pks = new List<IColumnMapping>();
+        private readonly Dictionary<string, IPropertyMap> _columnMappings = new Dictionary<string, IPropertyMap>();
+        private readonly List<IPropertyMap> _fks = new List<IPropertyMap>();
+        private readonly List<IPropertyMap> _pks = new List<IPropertyMap>();
 
         /// <summary>
         /// Entity type full name
@@ -65,7 +65,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Column mappings for table
         /// </summary>
-        public IColumnMapping[] Columns
+        public IPropertyMap[] Properties
         {
             get { return _columnMappings.Values.ToArray(); }
         }
@@ -73,7 +73,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Foreign key columns
         /// </summary>
-        public IColumnMapping[] Fks
+        public IPropertyMap[] Fks
         {
             get { return _fks.ToArray(); }
         }
@@ -81,19 +81,37 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Primary key columns
         /// </summary>
-        public IColumnMapping[] Pks
+        public IPropertyMap[] Pks
         {
             get { return _pks.ToArray(); }
         }
 
         /// <summary>
-        /// Gets column mapping by property name
+        /// Gets property map by property name
         /// </summary>
-        /// <param name="property"></param>
+        /// <param name="propertyName"></param>
         /// <returns></returns>
-        public IColumnMapping this[string property]
+        public IPropertyMap this[string propertyName]
         {
-            get { return _columnMappings[property]; }
+            get
+            {
+                if (!_columnMappings.ContainsKey(propertyName))
+                {
+                    return null;
+                }
+
+                return _columnMappings[propertyName];
+            }
+        }
+
+        /// <summary>
+        /// Gets property map by property name
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public IPropertyMap Prop(string propertyName)
+        {
+            return this[propertyName];
         }
 
         /// <summary>
@@ -135,20 +153,20 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <param name="property"></param>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        public ColumnMapping AddColumn(string property, string columnName)
+        public PropertyMap MapProperty(string property, string columnName)
         {
-            var cmap = new ColumnMapping(property, columnName) {TableMapping = this};
+            var cmap = new PropertyMap(property, columnName) {EntityMap = this};
             _columnMappings.Add(property, cmap);
 
             return cmap;
         }
 
-        public void AddFk(ColumnMapping colMapping)
+        public void AddFk(PropertyMap colMapping)
         {
             _fks.Add(colMapping);
         }
 
-        public void AddPk(ColumnMapping colMapping)
+        public void AddPk(PropertyMap colMapping)
         {
             _pks.Add(colMapping);
         }

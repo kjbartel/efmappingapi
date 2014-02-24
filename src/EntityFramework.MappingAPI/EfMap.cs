@@ -21,16 +21,16 @@ namespace EntityFramework.MappingAPI
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ITableMapping<T> Get<T>(DbContext context)
+        public static IEntityMap<T> Get<T>(DbContext context)
         {
-            return (ITableMapping<T>)Get(context)[typeof(T)];
+            return (IEntityMap<T>)Get(context)[typeof(T)];
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static ITableMapping Get(DbContext context, Type type)
+        public static IEntityMap Get(DbContext context, Type type)
         {
             return Get(context)[type];
         }
@@ -39,7 +39,7 @@ namespace EntityFramework.MappingAPI
         /// 
         /// </summary>
         /// <returns></returns>
-        public static ITableMapping Get(DbContext context, string typeFullName)
+        public static IEntityMap Get(DbContext context, string typeFullName)
         {
             return Get(context)[typeFullName];
         }

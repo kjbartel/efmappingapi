@@ -1,21 +1,27 @@
 ﻿
 using System;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace EntityFramework.MappingAPI
 {
-    public interface ITableMapping<T> : ITableMapping
-    {
-        IColumnMapping Col<T1>(Expression<Func<T, T1>> predicate);
-    }
-
-    public interface ITableMapping
+    /// <summary>
+    /// Generic entity map
+    /// </summary>
+    /// <typeparam name="T">Entity type</typeparam>
+    public interface IEntityMap<T> : IEntityMap
     {
         /// <summary>
-        /// Entity type full name
+        /// Get property mapping by predicate
         /// </summary>
-        //string TypeFullName { get; }
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IPropertyMap Prop<T1>(Expression<Func<T, T1>> predicate);
+    }
 
+    public interface IEntityMap
+    {
         /// <summary>
         /// Entity type
         /// </summary>
@@ -27,7 +33,7 @@ namespace EntityFramework.MappingAPI
         string TableName { get; }
 
         /// <summary>
-        /// Database schema
+        /// Table schema
         /// </summary>
         string Schema { get; }
 
@@ -44,7 +50,7 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Column mappings for table
         /// </summary>
-        IColumnMapping[] Columns { get; }
+        IPropertyMap[] Properties { get; }
 
         /// <summary>
         /// Parent DbMapping
@@ -54,18 +60,25 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Foreign key columns
         /// </summary>
-        IColumnMapping[] Fks { get; }
+        IPropertyMap[] Fks { get; }
 
         /// <summary>
         /// Primary key columns
         /// </summary>
-        IColumnMapping[] Pks { get; }
+        IPropertyMap[] Pks { get; }
 
         /// <summary>
-        /// Gets column mapping by property name
+        /// Gets property map by property name
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        IColumnMapping this[string property] { get; }
+        IPropertyMap this[string property] { get; }
+
+        /// <summary>
+        /// Gets property map by property name
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        IPropertyMap Prop(string propertyName);
     }
 }

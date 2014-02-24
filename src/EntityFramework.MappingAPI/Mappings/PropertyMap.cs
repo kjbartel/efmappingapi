@@ -11,7 +11,7 @@ namespace EntityFramework.MappingAPI.Mappings
     /// <summary>
     /// 
     /// </summary>
-    internal class ColumnMapping : IColumnMapping
+    internal class PropertyMap : IPropertyMap
     {
         /// <summary>
         /// Table column name
@@ -66,7 +66,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Paren table mapping
         /// </summary>
-        public ITableMapping TableMapping { get; internal set; }
+        public IEntityMap EntityMap { get; internal set; }
 
         /// <summary>
         /// 
@@ -84,9 +84,19 @@ namespace EntityFramework.MappingAPI.Mappings
         public string NavigationProperty { get; internal set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string ForeignKeyPropertyName { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IPropertyMap ForeignKey { get; internal set; }
+
+        /// <summary>
         /// Foreign key target column
         /// </summary>
-        public IColumnMapping FkTargetColumn { get; internal set; }
+        public IPropertyMap FkTargetColumn { get; internal set; }
 
         /// <summary>
         /// Edm property from storage entity set (SSpace).
@@ -111,7 +121,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// </summary>
         /// <param name="property"></param>
         /// <param name="columnName"></param>
-        internal ColumnMapping(string property, string columnName)
+        internal PropertyMap(string property, string columnName)
         {
             ColumnName = columnName;
             PropertyName = property;

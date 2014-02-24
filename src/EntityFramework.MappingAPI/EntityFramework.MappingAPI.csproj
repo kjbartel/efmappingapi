@@ -251,15 +251,15 @@
     <Compile Include="Exceptions\ParentNotMappedYetException.cs" />
     <Compile Include="Extensions\MappingApiExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="IColumnMapping.cs" />
-    <Compile Include="ITableMapping.cs" />
+    <Compile Include="IPropertyMap.cs" />
+    <Compile Include="IEntityMap.cs" />
     <Compile Include="Mappers\CodeFirstMapper.cs" />
     <Compile Include="Mappers\DbFirstMapper.cs" />
     <Compile Include="Mappers\MapperBase.cs" />
     <Compile Include="Mappers\TphData.cs" />
-    <Compile Include="Mappings\ColumnMapping.cs" />
+    <Compile Include="Mappings\PropertyMap.cs" />
     <Compile Include="Mappings\DbMapping.cs" />
-    <Compile Include="Mappings\TableMapping.cs" />
+    <Compile Include="Mappings\EntityMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

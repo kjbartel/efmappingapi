@@ -20,7 +20,7 @@ namespace EntityFramework.MappingAPI.Mappings
     /// </summary>
     internal class DbMapping
     {
-        private readonly Dictionary<string, ITableMapping> _tableMappings = new Dictionary<string, ITableMapping>();
+        private readonly Dictionary<string, IEntityMap> _tableMappings = new Dictionary<string, IEntityMap>();
         private readonly string _contextTypeName;
 
         private readonly MetadataWorkspace _metadataWorkspace;
@@ -114,10 +114,10 @@ namespace EntityFramework.MappingAPI.Mappings
 
                 foreach (var kvp in typeMappings)
                 {
-                    TableMapping tableMapping;
+                    EntityMap entityMap;
                     try
                     {
-                        tableMapping = mapper.MapTable(kvp.Key, kvp.Value);
+                        entityMap = mapper.MapTable(kvp.Key, kvp.Value);
                     }
                     catch (ParentNotMappedYetException)
                     {
@@ -125,13 +125,13 @@ namespace EntityFramework.MappingAPI.Mappings
                         continue;
                     }
 
-                    if (tableMapping == null)
+                    if (entityMap == null)
                     {
                         continue;
                     }
 
                     //tableMapping.DbMapping = this;
-                    _tableMappings.Add(kvp.Key, tableMapping);
+                    _tableMappings.Add(kvp.Key, entityMap);
                 }
 
                 typeMappings = nextLevel;
@@ -144,14 +144,14 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Tables in database
         /// </summary>
-        public ITableMapping[] Tables { get { return _tableMappings.Values.ToArray(); } }
+        public IEntityMap[] Tables { get { return _tableMappings.Values.ToArray(); } }
 
         /// <summary>
         /// Get table mapping by entity type
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ITableMapping this[Type type]
+        public IEntityMap this[Type type]
         {
             get { return this[type.FullName]; }
         }
@@ -161,7 +161,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// </summary>
         /// <param name="typeFullName"></param>
         /// <returns></returns>
-        public ITableMapping this[string typeFullName]
+        public IEntityMap this[string typeFullName]
         {
             get
             {

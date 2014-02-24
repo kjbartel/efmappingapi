@@ -31,7 +31,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// Table mappings dictionary where key is entity type full name.
         /// </summary>
-        private readonly Dictionary<string, TableMapping> _tableMappings = new Dictionary<string, TableMapping>();
+        private readonly Dictionary<string, EntityMap> _tableMappings = new Dictionary<string, EntityMap>();
 
         /// <summary>
         /// Primary keys of tables.
@@ -181,14 +181,14 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <param name="tableName"></param>
         /// <param name="schema"></param>
         /// <returns></returns>
-        internal TableMapping RegTable(string typeFullName, string tableName, string schema)
+        internal EntityMap RegEntity(string typeFullName, string tableName, string schema)
         {
             var entityType = TryGetRefObjectType(typeFullName);
 
-            var tableMappingType = typeof (TableMapping<>);
+            var tableMappingType = typeof (EntityMap<>);
             var genericType = tableMappingType.MakeGenericType(entityType);
 
-            var tableMapping = (TableMapping)Activator.CreateInstance(genericType);
+            var tableMapping = (EntityMap)Activator.CreateInstance(genericType);
             tableMapping.TypeFullName = typeFullName;
             tableMapping.TableName = tableName;
             tableMapping.Schema = schema;
@@ -221,7 +221,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// </summary>
         /// <param name="typeFullName"></param>
         /// <param name="edmItem"></param>
-        public TableMapping MapTable(string typeFullName, EdmType edmItem)
+        public EntityMap MapTable(string typeFullName, EdmType edmItem)
         {
             var identity = edmItem.FullName;
             if (!TphData.ContainsKey(identity))
@@ -261,22 +261,22 @@ namespace EntityFramework.MappingAPI.Mappers
             string tableName = GetTableName(storageEntitySet);
             string schema = (string)storageEntitySet.MetadataProperties["Schema"].Value;
 
-            var tableMapping = this.RegTable(typeFullName, tableName, schema);
-            tableMapping.IsRoot = isRoot;
-            tableMapping.EdmType = edmItem;
-            tableMapping.ParentEdmType = tableMapping.IsRoot ? null : baseEdmType;
+            var entityMap = this.RegEntity(typeFullName, tableName, schema);
+            entityMap.IsRoot = isRoot;
+            entityMap.EdmType = edmItem;
+            entityMap.ParentEdmType = entityMap.IsRoot ? null : baseEdmType;
 
             _pks[tableName] = storageEntitySet.ElementType.KeyMembers.Select(x => x.Name).ToArray();
 
-            tableMapping.IsTph = TphData[identity].Discriminators.Count > 0;
+            entityMap.IsTph = TphData[identity].Discriminators.Count > 0;
 
             string prefix = null;
             int i = 0;
 
-            var propertiesToMap = GetPropertiesToMap(tableMapping, storageEntitySet.ElementType.Properties);
+            var propertiesToMap = GetPropertiesToMap(entityMap, storageEntitySet.ElementType.Properties);
             foreach (var prop in propertiesToMap)
             {
-                MapColumn(tableMapping, prop, identity, ref i, ref prefix);
+                MapColumn(entityMap, prop, identity, ref i, ref prefix);
             }
 
             foreach (var navigationProperty in TphData[identity].NavProperties)
@@ -289,23 +289,31 @@ namespace EntityFramework.MappingAPI.Mappers
 
                 var to = associationType.ReferentialConstraints[0].ToProperties[0];
 
-                var col = tableMapping.Columns.Cast<ColumnMapping>()
+                var propertyMap = entityMap.Properties.Cast<PropertyMap>()
                     .FirstOrDefault(x => x.EdmMember == to);
 
-                if (col != null)
+                if (propertyMap != null)
                 {
-                    col.NavigationProperty = navigationProperty.Name;
+                    propertyMap.NavigationProperty = navigationProperty.Name;
+
+                    if (entityMap.Prop(navigationProperty.Name) == null)
+                    {
+                        var navigationPropertyMap = entityMap.MapProperty(navigationProperty.Name, propertyMap.ColumnName);
+                        navigationPropertyMap.IsNavigationProperty = true;
+                        navigationPropertyMap.ForeignKeyPropertyName = propertyMap.PropertyName;
+                        navigationPropertyMap.ForeignKey = propertyMap;
+                    }
                 }
             }
 
             foreach (var discriminator in TphData[identity].Discriminators)
             {
-                var column = tableMapping.AddColumn(discriminator.Key, discriminator.Key);
+                var column = entityMap.MapProperty(discriminator.Key, discriminator.Key);
                 column.DefaultValue = discriminator.Value;
                 column.IsDiscriminator = true;
             }
 
-            return tableMapping;
+            return entityMap;
         }
 
         /// <summary>
@@ -314,17 +322,17 @@ namespace EntityFramework.MappingAPI.Mappers
         /// First columns are from base class. Derived types, which name starts with 'A', columns are before type, which name starts with 'B' etc.
         /// So the logic is to include all properties inherited from base types and exclude all already bound properties from siblings.
         /// </summary>
-        /// <param name="tableMapping"></param>
+        /// <param name="entityMap"></param>
         /// <param name="properties"></param>
         /// <returns></returns>
-        private IEnumerable<EdmProperty> GetPropertiesToMap(TableMapping tableMapping, IEnumerable<EdmProperty> properties)
+        private IEnumerable<EdmProperty> GetPropertiesToMap(EntityMap entityMap, IEnumerable<EdmProperty> properties)
         {
-            if (tableMapping.IsRoot)
+            if (entityMap.IsRoot)
             {
                 return properties;
             }
 
-            var parentEdmType = tableMapping.ParentEdmType;
+            var parentEdmType = entityMap.ParentEdmType;
 
             var include = new List<EdmProperty>();
             var exclude = new List<EdmProperty>();
@@ -337,11 +345,11 @@ namespace EntityFramework.MappingAPI.Mappers
                     break;
                 }
 
-                include.AddRange(parent.Columns.Cast<ColumnMapping>().Select(x => x.EdmProperty));
+                include.AddRange(parent.Properties.Cast<PropertyMap>().Select(x => x.EdmProperty));
 
                 exclude.AddRange(_tableMappings.Values.Where(x => x.ParentEdmType == parentEdmType)
-                    .SelectMany(x => x.Columns)
-                    .Cast<ColumnMapping>()
+                    .SelectMany(x => x.Properties)
+                    .Cast<PropertyMap>()
                     .Select(x => x.EdmProperty));
 
                 parentEdmType = parent.ParentEdmType;
@@ -353,11 +361,11 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="tableMapping"></param>
+        /// <param name="entityMap"></param>
         /// <param name="prop"></param>
         /// <param name="i"></param>
         /// <param name="prefix"></param>
-        private void MapColumn(TableMapping tableMapping, EdmProperty prop, string identity, ref int i, ref string prefix)
+        private void MapColumn(EntityMap entityMap, EdmProperty prop, string identity, ref int i, ref string prefix)
         {
             //var identity = tableMapping.EdmType.FullName;
             var entityMembers = TphData[identity].Properties;
@@ -396,25 +404,25 @@ namespace EntityFramework.MappingAPI.Mappers
                 propName = entityMembers[i++].Name;
             }
 
-            var propInfo = tableMapping.Type.GetProperty(propName, '.');
+            var propInfo = entityMap.Type.GetProperty(propName, '.');
             if (propInfo == null)
             {
                 // entity does not contain such property
                 return;
             }
 
-            ColumnMapping colMapping;
+            PropertyMap colMapping;
             try
             {
-                colMapping = tableMapping.AddColumn(propName, columnName);
+                colMapping = entityMap.MapProperty(propName, columnName);
                 colMapping.EdmProperty = prop;
                 colMapping.EdmMember = edmMember;
                 colMapping.IsNavigationProperty = edmMember is NavigationProperty;
-                colMapping.IsFk = _fks.ContainsKey(edmMember);
-                if (colMapping.IsFk)
+                colMapping.IsFk = colMapping.IsNavigationProperty || _fks.ContainsKey(edmMember);
+                if (colMapping.IsFk && _fks.ContainsKey(edmMember))
                 {
                     colMapping.FkTargetEdmMember = _fks[edmMember];
-                    tableMapping.AddFk(colMapping);
+                    entityMap.AddFk(colMapping);
                 }
             }
             catch (Exception ex)
@@ -422,16 +430,16 @@ namespace EntityFramework.MappingAPI.Mappers
                 var errorMessage = string.Format("Failed to map propName {0} to column {1} on table {2} ({3})",
                     propName,
                     columnName,
-                    tableMapping.TableName,
-                    tableMapping.TypeFullName);
+                    entityMap.TableName,
+                    entityMap.TypeFullName);
 
                 throw new Exception(errorMessage, ex);
             }
 
-            if (_pks[tableMapping.TableName].Contains(propName))
+            if (_pks[entityMap.TableName].Contains(propName))
             {
                 colMapping.IsPk = true;
-                tableMapping.AddPk(colMapping);
+                entityMap.AddPk(colMapping);
             }
 
             foreach (var facet in prop.TypeUsage.Facets)
@@ -476,13 +484,13 @@ namespace EntityFramework.MappingAPI.Mappers
             var pks = _tableMappings.Values.SelectMany(x => x.Pks);
 
             // can't use ToDictionary, because tph tables share mappings
-            var pkDict = new Dictionary<EdmMember, ColumnMapping>();
-            foreach (ColumnMapping columnMapping in pks)
+            var pkDict = new Dictionary<EdmMember, PropertyMap>();
+            foreach (PropertyMap columnMapping in pks)
             {
                 pkDict[columnMapping.EdmMember] = columnMapping;
             }
 
-            foreach (ColumnMapping fkCol in fks)
+            foreach (PropertyMap fkCol in fks)
             {
                 fkCol.FkTargetColumn = pkDict[fkCol.FkTargetEdmMember];
             }

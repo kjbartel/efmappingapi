@@ -3,10 +3,10 @@ using EntityFramework.MappingAPI.Mappings;
 
 namespace EntityFramework.MappingAPI
 {
-    public interface IColumnMapping
+    public interface IPropertyMap
     {
         /// <summary>
-        /// Table column name
+        /// Table column name property is mapped to
         /// </summary>
         string ColumnName { get; }
 
@@ -56,9 +56,9 @@ namespace EntityFramework.MappingAPI
         bool IsDiscriminator { get; set; }
 
         /// <summary>
-        /// Paren table mapping
+        /// Paren entity mapping
         /// </summary>
-        ITableMapping TableMapping { get; }
+        IEntityMap EntityMap { get; }
 
         /// <summary>
         /// 
@@ -76,8 +76,18 @@ namespace EntityFramework.MappingAPI
         string NavigationProperty { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        string ForeignKeyPropertyName { get; }
+
+        /// <summary>
         /// Foreign key target column
         /// </summary>
-        IColumnMapping FkTargetColumn { get; }
+        IPropertyMap FkTargetColumn { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IPropertyMap ForeignKey { get; }
     }
 }

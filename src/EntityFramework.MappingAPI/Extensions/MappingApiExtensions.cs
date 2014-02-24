@@ -11,7 +11,7 @@ namespace EntityFramework.MappingAPI.Extensions
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static ITableMapping[] Db(this DbContext ctx)
+        public static IEntityMap[] Db(this DbContext ctx)
         {
             return EfMap.Get(ctx).Tables;
         }
@@ -22,7 +22,7 @@ namespace EntityFramework.MappingAPI.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static ITableMapping<T> Db<T>(this DbContext ctx)
+        public static IEntityMap<T> Db<T>(this DbContext ctx)
         {
             return EfMap.Get<T>(ctx);
         }
@@ -35,7 +35,7 @@ namespace EntityFramework.MappingAPI.Extensions
         /// <param name="ctx"></param>
         /// <param name="dbset"></param>
         /// <returns></returns>
-        public static ITableMapping<T1> Db<T, T1>(this T ctx, Expression<Func<T, DbSet<T1>>> dbset) where T : DbContext where T1 : class
+        public static IEntityMap<T1> Db<T, T1>(this T ctx, Expression<Func<T, DbSet<T1>>> dbset) where T : DbContext where T1 : class
         {
             return ctx.Db<T1>();
         }
@@ -46,7 +46,7 @@ namespace EntityFramework.MappingAPI.Extensions
         /// <param name="ctx"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static ITableMapping Db(this DbContext ctx, Type type)
+        public static IEntityMap Db(this DbContext ctx, Type type)
         {
             return EfMap.Get(ctx)[type];
         }
@@ -57,7 +57,7 @@ namespace EntityFramework.MappingAPI.Extensions
         /// <param name="ctx"></param>
         /// <param name="typeFullName"></param>
         /// <returns></returns>
-        public static ITableMapping Db(this DbContext ctx, string typeFullName)
+        public static IEntityMap Db(this DbContext ctx, string typeFullName)
         {
             return EfMap.Get(ctx)[typeFullName];
         }

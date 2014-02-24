@@ -262,6 +262,8 @@
     <Compile Include="CodeFirst\MappingTest.cs" />
     <Compile Include="CodeFirst\TestBase.cs" />
     <Compile Include="CodeFirst\TestContext.cs" />
+    <Compile Include="CodeFirst\TestHelper.cs" />
+    <Compile Include="CodeFirst\TphTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
