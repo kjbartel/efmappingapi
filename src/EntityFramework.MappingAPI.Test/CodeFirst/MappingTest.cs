@@ -52,11 +52,11 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         [Test]
         public void Entity_ComplexType()
         {
-            using (var ctx = new TestContext())
-            {
-                var map = ctx.Db<TestUser>();
+using (var ctx = new TestContext())
+{
+    var map = ctx.Db<TestUser>();
 
-                map.Prop(x => x.Id)
+    map.Prop(x => x.Id)
                     .HasColumnName("Id")
                     .IsPk()
                     .IsFk(false)
