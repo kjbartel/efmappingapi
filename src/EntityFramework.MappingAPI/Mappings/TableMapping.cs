@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 #if EF6
@@ -11,6 +12,17 @@ using System.Reflection;
 
 namespace EntityFramework.MappingAPI.Mappings
 {
+    internal class TableMapping<T> : TableMapping, ITableMapping<T>
+    {
+        public IColumnMapping Col<T1>(Expression<Func<T, T1>> predicate)
+        {
+            var predicateString = predicate.ToString();
+            var i = predicateString.IndexOf('.');
+            var propName = predicateString.Substring(i + 1);
+            return base[propName];
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -23,22 +35,22 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Entity type full name
         /// </summary>
-        public string TypeFullName { get; private set; }
+        public string TypeFullName { get; internal set; }
 
         /// <summary>
         /// Entity type
         /// </summary>
-        public Type Type { get; private set; }
+        public Type Type { get; internal set; }
 
         /// <summary>
         /// Table name in database
         /// </summary>
-        public string TableName { get; private set; }
+        public string TableName { get; internal set; }
 
         /// <summary>
         /// Database schema
         /// </summary>
-        public string Schema { get; private set; }
+        public string Schema { get; internal set; }
 
         /// <summary>
         /// Is table-per-hierarchy mapping
@@ -87,7 +99,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Parent DbMapping
         /// </summary>
-        public IDbMapping DbMapping { get; internal set; }
+        //public IDbMapping DbMapping { get; internal set; }
 
         /// <summary>
         /// 
@@ -99,6 +111,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// </summary>
         internal EdmType EdmType { get; set; }
 
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -113,22 +126,8 @@ namespace EntityFramework.MappingAPI.Mappings
 
             Type = TryGetRefObjectType();
         }
+        */
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private Type TryGetRefObjectType()
-        {
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                var t = a.GetType(TypeFullName);
-                if (t != null)
-                    return t;
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// 

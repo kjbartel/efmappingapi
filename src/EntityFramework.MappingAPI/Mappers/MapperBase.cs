@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using EntityFramework.MappingAPI.Exceptions;
 using EntityFramework.MappingAPI.Extensions;
 using EntityFramework.MappingAPI.Mappings;
@@ -181,10 +183,37 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <returns></returns>
         internal TableMapping RegTable(string typeFullName, string tableName, string schema)
         {
-            var tableMapping = new TableMapping(typeFullName, tableName, schema);
+            var entityType = TryGetRefObjectType(typeFullName);
+
+            var tableMappingType = typeof (TableMapping<>);
+            var genericType = tableMappingType.MakeGenericType(entityType);
+
+            var tableMapping = (TableMapping)Activator.CreateInstance(genericType);
+            tableMapping.TypeFullName = typeFullName;
+            tableMapping.TableName = tableName;
+            tableMapping.Schema = schema;
+            tableMapping.Type = entityType;
+
             _tableMappings.Add(typeFullName, tableMapping);
 
             return tableMapping;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private Type TryGetRefObjectType(string typeFullName)
+        {
+            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var t = a.GetType(typeFullName);
+                if (t != null)
+                    return t;
+            }
+
+            return null;
         }
 
         /// <summary>

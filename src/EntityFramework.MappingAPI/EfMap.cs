@@ -8,12 +8,12 @@ namespace EntityFramework.MappingAPI
     /// <summary>
     /// 
     /// </summary>
-    public class EfMap
+    internal class EfMap
     {
         /// <summary>
         /// 
         /// </summary>
-        private static readonly Dictionary<Type, IDbMapping> Mappings = new Dictionary<Type, IDbMapping>();
+        private static readonly Dictionary<Type, DbMapping> Mappings = new Dictionary<Type, DbMapping>();
 
         /// <summary>
         /// 
@@ -21,9 +21,27 @@ namespace EntityFramework.MappingAPI
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ITableMapping Get<T>(DbContext context)
+        public static ITableMapping<T> Get<T>(DbContext context)
         {
-            return Get(context)[typeof(T)];
+            return (ITableMapping<T>)Get(context)[typeof(T)];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static ITableMapping Get(DbContext context, Type type)
+        {
+            return Get(context)[type];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static ITableMapping Get(DbContext context, string typeFullName)
+        {
+            return Get(context)[typeFullName];
         }
 
         /// <summary>
@@ -31,7 +49,7 @@ namespace EntityFramework.MappingAPI
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static IDbMapping Get(DbContext context)
+        public static DbMapping Get(DbContext context)
         {
             var contextType = context.GetType();
             if (Mappings.ContainsKey(contextType))

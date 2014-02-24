@@ -1,14 +1,20 @@
 ﻿
 using System;
+using System.Linq.Expressions;
 
 namespace EntityFramework.MappingAPI
 {
+    public interface ITableMapping<T> : ITableMapping
+    {
+        IColumnMapping Col<T1>(Expression<Func<T, T1>> predicate);
+    }
+
     public interface ITableMapping
     {
         /// <summary>
         /// Entity type full name
         /// </summary>
-        string TypeFullName { get; }
+        //string TypeFullName { get; }
 
         /// <summary>
         /// Entity type
@@ -43,7 +49,7 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Parent DbMapping
         /// </summary>
-        IDbMapping DbMapping { get; }
+        //IDbMapping DbMapping { get; }
 
         /// <summary>
         /// Foreign key columns

@@ -18,7 +18,7 @@ namespace EntityFramework.MappingAPI.Mappings
     /// <summary>
     /// 
     /// </summary>
-    internal class DbMapping : IDbMapping
+    internal class DbMapping
     {
         private readonly Dictionary<string, ITableMapping> _tableMappings = new Dictionary<string, ITableMapping>();
         private readonly string _contextTypeName;
@@ -130,7 +130,7 @@ namespace EntityFramework.MappingAPI.Mappings
                         continue;
                     }
 
-                    tableMapping.DbMapping = this;
+                    //tableMapping.DbMapping = this;
                     _tableMappings.Add(kvp.Key, tableMapping);
                 }
 

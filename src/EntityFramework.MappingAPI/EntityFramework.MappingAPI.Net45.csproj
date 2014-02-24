@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="EfMap.cs" />
     <Compile Include="Exceptions\ParentNotMappedYetException.cs" />
+    <Compile Include="Extensions\MappingApiExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="IColumnMapping.cs" />
     <Compile Include="IDbMapping.cs" />
