@@ -31,7 +31,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Is column nullable
         /// </summary>
-        public bool Nullable { get; internal set; }
+        public bool IsRequired { get; internal set; }
 
         /// <summary>
         /// Column default value
@@ -120,6 +120,26 @@ namespace EntityFramework.MappingAPI.Mappings
         /// Stored for linking foreign keys.
         /// </summary>
         internal EdmMember FkTargetEdmMember { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Unicode { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool FixedLength { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte Precision { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte Scale { get; set; }
 
         /// <summary>
         /// 

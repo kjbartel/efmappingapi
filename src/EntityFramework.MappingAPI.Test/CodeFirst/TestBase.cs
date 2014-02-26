@@ -17,8 +17,14 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         [SetUp]
         public virtual void Setup()
         {
-            //Database.SetInitializer(new CreateDatabaseIfNotExists<TestContext>());
-            Database.SetInitializer<TestContext>(null);
+            if (!Database.Exists("TestContext"))
+            {
+                Database.SetInitializer(new CreateDatabaseIfNotExists<TestContext>());
+            }
+            else
+            {
+                Database.SetInitializer<TestContext>(null);
+            }
         }
 
         protected TestContext GetContext()

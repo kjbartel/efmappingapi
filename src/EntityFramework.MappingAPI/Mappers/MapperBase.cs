@@ -315,6 +315,8 @@ namespace EntityFramework.MappingAPI.Mappers
                 var propertyMap = entityMap.MapProperty(discriminator.Key, discriminator.Key);
                 propertyMap.DefaultValue = discriminator.Value;
                 propertyMap.IsDiscriminator = true;
+
+                entityMap.AddDiscriminator(propertyMap);
             }
 
             return entityMap;
@@ -450,8 +452,20 @@ namespace EntityFramework.MappingAPI.Mappers
             {
                 switch (facet.Name)
                 {
+                    case "Unicode":
+                        propertyMap.Unicode = (bool) facet.Value;
+                        break;
+                    case "FixedLength":
+                        propertyMap.FixedLength = (bool)facet.Value;
+                        break;
+                    case "Precision":
+                        propertyMap.Precision = (byte)facet.Value;
+                        break;
+                    case "Scale":
+                        propertyMap.Scale = (byte)facet.Value;
+                        break;
                     case "Nullable":
-                        propertyMap.Nullable = (bool)facet.Value;
+                        propertyMap.IsRequired = !(bool)facet.Value;
                         break;
                     case "DefaultValue":
                         propertyMap.DefaultValue = facet.Value;

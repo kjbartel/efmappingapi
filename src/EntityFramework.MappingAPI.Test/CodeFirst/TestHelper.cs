@@ -74,5 +74,12 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
             Assert.AreEqual(isIdentity, c.IsIdentity, message);
             return c;
         }
+
+        public static IPropertyMap IsRequired(this IPropertyMap c, bool isRequired = true)
+        {
+            string message = string.Format("Property {0} required flag should be '{1}', but was '{2}'", c.PropertyName, isRequired, c.IsRequired);
+            Assert.AreEqual(isRequired, c.IsRequired, message);
+            return c;
+        }
     }
 }

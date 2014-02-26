@@ -23,7 +23,7 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Is column nullable
         /// </summary>
-        bool Nullable { get; }
+        bool IsRequired { get; }
 
         /// <summary>
         /// Column default value

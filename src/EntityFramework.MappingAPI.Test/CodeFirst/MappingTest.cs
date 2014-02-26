@@ -52,11 +52,11 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         [Test]
         public void Entity_ComplexType()
         {
-using (var ctx = new TestContext())
-{
-    var map = ctx.Db<TestUser>();
+            using (var ctx = new TestContext())
+            {
+                var map = ctx.Db<TestUser>();
 
-    map.Prop(x => x.Id)
+                map.Prop(x => x.Id)
                     .HasColumnName("Id")
                     .IsPk()
                     .IsFk(false)
@@ -226,6 +226,7 @@ using (var ctx = new TestContext())
                     .IsPk(false)
                     .IsFk(false)
                     .IsIdentity(false)
+                    .IsRequired()
                     .IsNavigationProperty(false)
                     .MaxLength(255);
 
@@ -234,6 +235,7 @@ using (var ctx = new TestContext())
                     .IsPk(false)
                     .IsFk(false)
                     .IsIdentity(false)
+                    .IsRequired(false)
                     .IsNavigationProperty(false)
                     .MaxLength(NvarcharMax);
 
@@ -242,6 +244,7 @@ using (var ctx = new TestContext())
                     .IsPk(false)
                     .IsFk()
                     .IsIdentity(false)
+                    .IsRequired(false)
                     .IsNavigationProperty(false)
                     .NavigationProperty("Parent");
 
@@ -261,12 +264,14 @@ using (var ctx = new TestContext())
                     .IsPk(false)
                     .IsFk(false)
                     .IsIdentity(false)
+                    .IsRequired(true)
                     .IsNavigationProperty(false);
 
                 map.Prop(x => x.ModifiedAt)
                     .HasColumnName("ModifiedAt")
                     .IsPk(false)
                     .IsFk(false)
+                    .IsRequired(false)
                     .IsIdentity(false)
                     .IsNavigationProperty(false);
             }

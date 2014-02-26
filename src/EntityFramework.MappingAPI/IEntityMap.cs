@@ -63,6 +63,11 @@ namespace EntityFramework.MappingAPI
         IPropertyMap[] Pks { get; }
 
         /// <summary>
+        /// Tph entity discriminators
+        /// </summary>
+        IPropertyMap[] Discriminators { get; }
+
+        /// <summary>
         /// Gets property map by property name
         /// </summary>
         /// <param name="property"></param>

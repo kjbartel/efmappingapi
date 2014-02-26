@@ -28,9 +28,10 @@ namespace EntityFramework.MappingAPI.Mappings
     /// </summary>
     internal class EntityMap : IEntityMap
     {
-        private readonly Dictionary<string, IPropertyMap> _columnMappings = new Dictionary<string, IPropertyMap>();
+        private readonly Dictionary<string, IPropertyMap> _propertyMaps = new Dictionary<string, IPropertyMap>();
         private readonly List<IPropertyMap> _fks = new List<IPropertyMap>();
         private readonly List<IPropertyMap> _pks = new List<IPropertyMap>();
+        private readonly List<IPropertyMap> _discriminators = new List<IPropertyMap>();
 
         /// <summary>
         /// Entity type full name
@@ -67,11 +68,11 @@ namespace EntityFramework.MappingAPI.Mappings
         /// </summary>
         public IPropertyMap[] Properties
         {
-            get { return _columnMappings.Values.ToArray(); }
+            get { return _propertyMaps.Values.ToArray(); }
         }
 
         /// <summary>
-        /// Foreign key columns
+        /// Foreign key properties
         /// </summary>
         public IPropertyMap[] Fks
         {
@@ -79,11 +80,19 @@ namespace EntityFramework.MappingAPI.Mappings
         }
 
         /// <summary>
-        /// Primary key columns
+        /// Primary key properties
         /// </summary>
         public IPropertyMap[] Pks
         {
             get { return _pks.ToArray(); }
+        }
+
+        /// <summary>
+        /// Tph entity discriminators
+        /// </summary>
+        public IPropertyMap[] Discriminators
+        {
+            get { return _discriminators.ToArray(); }
         }
 
         /// <summary>
@@ -95,12 +104,12 @@ namespace EntityFramework.MappingAPI.Mappings
         {
             get
             {
-                if (!_columnMappings.ContainsKey(propertyName))
+                if (!_propertyMaps.ContainsKey(propertyName))
                 {
                     return null;
                 }
 
-                return _columnMappings[propertyName];
+                return _propertyMaps[propertyName];
             }
         }
 
@@ -156,7 +165,7 @@ namespace EntityFramework.MappingAPI.Mappings
         public PropertyMap MapProperty(string property, string columnName)
         {
             var cmap = new PropertyMap(property, columnName) {EntityMap = this};
-            _columnMappings.Add(property, cmap);
+            _propertyMaps.Add(property, cmap);
 
             return cmap;
         }
@@ -169,6 +178,11 @@ namespace EntityFramework.MappingAPI.Mappings
         public void AddPk(PropertyMap colMapping)
         {
             _pks.Add(colMapping);
+        }
+
+        public void AddDiscriminator(PropertyMap propertyMap)
+        {
+            _discriminators.Add(propertyMap);
         }
     }
 }

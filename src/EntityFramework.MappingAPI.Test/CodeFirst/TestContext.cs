@@ -60,7 +60,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
             mb.Entity<TestUser>().Ignore(x => x.FullName);
 
             mb.Entity<Page>().HasKey(x => x.PageId);
-            mb.Entity<Page>().Property(x => x.Title).HasMaxLength(255);
+            mb.Entity<Page>().Property(x => x.Title).HasMaxLength(255).IsRequired();
             mb.Entity<Page>().HasOptional(x => x.Parent).WithMany().HasForeignKey(x => x.ParentId);
             mb.Entity<Page>().HasRequired(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById);
             mb.Entity<Page>().HasOptional(x => x.ModifiedBy).WithMany().HasForeignKey(x => x.ModifiedById);
