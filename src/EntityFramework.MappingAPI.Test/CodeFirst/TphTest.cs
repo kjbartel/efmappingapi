@@ -23,7 +23,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                 map.Prop(x => x.Name)
                     .HasColumnName("Name")
                     .MaxLength(NvarcharMax)
-                    .NavigationProperty(null)
+                    .NavigationPropertyName(null)
                     .IsPk(false)
                     .IsFk(false);
 
@@ -52,29 +52,33 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                 var map = ctx.Db<AWorkerTPH>();
                 Console.WriteLine("{0}:{1}", map.Type, map.TableName);
 
+                map.Prop(x => x.Id)
+                    .HasColumnName("Id");
 
+                map.Prop(x => x.Name)
+                    .HasColumnName("Name");
 
-                /*
-                Cols(columns)
-                    .Count(6)
-                    .Col("Id")
-                        .IsPk().Prop("Id").IsNavProp(false)
-                        .And
-                    .Col("Name")
-                        .IsPk(false).Prop("Name").IsNavProp(false)
-                        .And
-                    .Col("JobTitle")
-                        .IsPk(false).Prop("Title").IsNavProp(false)
-                        .And
-                    .Col("BossId")
-                        .IsPk(false).Prop("BossId").IsFk().NavProp("Boss")
-                        .And
-                    .Col("RefId")
-                        .IsPk(false).Prop("RefId").IsNavProp(false)
-                        .And
-                    .Col("__employeeType")
-                        .IsPk(false).Prop("__employeeType").IsNavProp(false);
-                 */
+                map.Prop(x => x.Title)
+                    .HasColumnName("JobTitle");
+
+                map.Prop(x => x.Boss)
+                    .IsNavigationProperty()
+                    .ForeignKeyPropertyName("BossId")
+                    .ForeignKey(map.Prop(x => x.BossId))
+                    .IsFk(false)
+                    .HasColumnName("BossId");
+
+                map.Prop(x => x.BossId)
+                    .IsFk()
+                    .NavigationPropertyName("Boss")
+                    .NavigationProperty(map.Prop(x => x.Boss))
+                    .HasColumnName("BossId");
+
+                map.Prop(x => x.RefId)
+                    .HasColumnName("RefId");
+
+                Assert.AreEqual(1, map.Discriminators.Length);
+                Assert.AreEqual("__employeeType", map.Discriminators[0].ColumnName);
             }
         }
 
@@ -86,14 +90,23 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                 var map = ctx.Db<ManagerTPH>();
                 Console.WriteLine("{0}:{1}", map.Type, map.TableName);
 
-                /*
-                AssertColumnName(columns, "Id", "Id");
-                AssertColumnName(columns, "Name", "Name");
-                AssertColumnName(columns, "JobTitle", "Title");
-                AssertColumnName(columns, "Rank", "Rank");
-                AssertColumnName(columns, "RefId1", "RefId");
-                AssertColumnName(columns, "__employeeType", "__employeeType");
-                 */
+                map.Prop(x => x.Id)
+                    .HasColumnName("Id");
+
+                map.Prop(x => x.Name)
+                    .HasColumnName("Name");
+
+                map.Prop(x => x.Title)
+                    .HasColumnName("JobTitle");
+
+                map.Prop(x => x.Rank)
+                    .HasColumnName("Rank");
+
+                map.Prop(x => x.RefId)
+                    .HasColumnName("RefId1");
+
+                Assert.AreEqual(1, map.Discriminators.Length);
+                Assert.AreEqual("__employeeType", map.Discriminators[0].ColumnName);
             }
         }
 
@@ -102,10 +115,12 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         {
             using (var ctx = new TestContext())
             {
-                var tableMapping = ctx.Db<ContractBase>();
+                var map = ctx.Db<ContractBase>();
 
-                var columns = tableMapping.Properties;
+                var columns = map.Properties;
                 Assert.AreEqual(19, columns.Length);
+
+                Assert.AreEqual(1, map.Discriminators.Length);
             }
         }
 
@@ -114,10 +129,26 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         {
             using (var ctx = new TestContext())
             {
-                var tableMapping = ctx.Db<Contract>();
+                var map = ctx.Db<Contract>();
 
-                var columns = tableMapping.Properties;
+                var columns = map.Properties;
                 Assert.AreEqual(19, columns.Length);
+
+                map.Prop(x => x.Id)
+                    .IsIdentity()
+                    .IsFk(false)
+                    .IsDiscriminator(false)
+                    .IsRequired()
+                    .HasColumnName("Id");
+
+
+                map.Prop(x => x.AvpContractNr)
+                    .IsIdentity(false)
+                    .IsFk(false)
+                    .IsDiscriminator(false)
+                    .IsRequired(false)
+                    .HasColumnName("AvpContractNr")
+                    .MaxLength(50);
             }
         }
 
@@ -154,6 +185,11 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
                 var columns = tableMapping.Properties;
                 Assert.AreEqual(24, columns.Length);
+
+                tableMapping.Prop(x => x.Base)
+                    .HasColumnName("Base")
+                    .HasPrecision(18)
+                    .HasScale(4);
             }
         }
 

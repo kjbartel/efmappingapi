@@ -55,6 +55,20 @@ namespace EntityFramework.MappingAPI
         /// </summary>
         bool IsDiscriminator { get; set; }
 
+        byte Precision { get; set; }
+
+        byte Scale { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool Unicode { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool FixedLength { get; set; }
+
         /// <summary>
         /// Paren entity mapping
         /// </summary>

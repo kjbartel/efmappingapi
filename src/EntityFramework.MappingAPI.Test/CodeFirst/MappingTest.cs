@@ -158,7 +158,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .IsFk()
                     .HasColumnName("RefereeId")
                     .IsNavigationProperty(false)
-                    .NavigationProperty("Referee");
+                    .NavigationPropertyName("Referee");
                 
                 map.Prop(x => x.Referee)
                     .HasColumnName("RefereeId")
@@ -246,7 +246,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .IsIdentity(false)
                     .IsRequired(false)
                     .IsNavigationProperty(false)
-                    .NavigationProperty("Parent");
+                    .NavigationPropertyName("Parent");
 
                 Assert.AreEqual(map.Prop(x => x.PageId), map.Prop(x => x.ParentId).FkTargetColumn);
                

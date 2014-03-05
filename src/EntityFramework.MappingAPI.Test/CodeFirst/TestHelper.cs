@@ -40,7 +40,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
             return c;
         }
 
-        public static IPropertyMap NavigationProperty(this IPropertyMap c, string navigationProperty)
+        public static IPropertyMap NavigationPropertyName(this IPropertyMap c, string navigationProperty)
         {
             string message = string.Format("Property {0} navigation property should be '{1}', but was '{2}'", c.PropertyName, navigationProperty, c.NavigationPropertyName);
             Assert.AreEqual(navigationProperty, c.NavigationPropertyName, message);
@@ -58,6 +58,13 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         {
             string message = string.Format("Property {0} fk does not match", c.PropertyName);
             Assert.AreEqual(fk, c.ForeignKey, message);
+            return c;
+        }
+
+        public static IPropertyMap NavigationProperty(this IPropertyMap c, IPropertyMap navigationProperty)
+        {
+            string message = string.Format("Property {0} navigation property does not match", c.PropertyName);
+            Assert.AreEqual(navigationProperty, c.NavigationProperty, message);
             return c;
         }
 
@@ -79,6 +86,20 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         {
             string message = string.Format("Property {0} required flag should be '{1}', but was '{2}'", c.PropertyName, isRequired, c.IsRequired);
             Assert.AreEqual(isRequired, c.IsRequired, message);
+            return c;
+        }
+
+        public static IPropertyMap HasPrecision(this IPropertyMap c, byte precision)
+        {
+            string message = string.Format("Property {0} precision should be '{1}', but was '{2}'", c.PropertyName, precision, c.Precision);
+            Assert.AreEqual(precision, c.Precision, message);
+            return c;
+        }
+
+        public static IPropertyMap HasScale(this IPropertyMap c, byte scale)
+        {
+            string message = string.Format("Property {0} scale should be '{1}', but was '{2}'", c.PropertyName, scale, c.Scale);
+            Assert.AreEqual(scale, c.Scale, message);
             return c;
         }
     }
