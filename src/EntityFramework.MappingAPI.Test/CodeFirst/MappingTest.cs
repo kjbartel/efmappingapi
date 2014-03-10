@@ -27,6 +27,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                 }
 
                 Assert.AreEqual(ctx.Db<Page>().TableName, "Pages");
+                Assert.AreEqual(ctx.Db<Page>().Schema, "dbo");
                 Assert.AreEqual(ctx.Db<PageTranslations>().TableName, "PageTranslations");
 
                 Assert.AreEqual(ctx.Db<TestUser>().TableName, "Users");
@@ -46,6 +47,9 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
                 Assert.AreEqual(ctx.Db<WorkerTPT>().TableName, "WorkerTPTs");
                 Assert.AreEqual(ctx.Db<ManagerTPT>().TableName, "ManagerTPTs");
+
+                Assert.AreEqual(ctx.Db<Foo>().TableName, "FOO");
+                Assert.AreEqual(ctx.Db<Foo>().Schema, "dbx");
             }
         }
 

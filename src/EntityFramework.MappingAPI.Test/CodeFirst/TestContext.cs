@@ -49,10 +49,14 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         public DbSet<ContractKomb1> K1Contracts { get; set; }
         public DbSet<ContractKomb2> K2Contracts { get; set; }
 
+        public DbSet<Foo> Foos { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder mb)
         {
             mb.ComplexType<Contact>();
             mb.ComplexType<Address>();
+
+            mb.Entity<Foo>().ToTable("FOO", "dbx");
 
             mb.Entity<TestUser>().ToTable("Users");
             mb.Entity<TestUser>().Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

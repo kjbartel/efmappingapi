@@ -253,6 +253,7 @@
     <Compile Include="CodeFirst\Domain\Employee.cs" />
     <Compile Include="CodeFirst\Domain\Entity.cs" />
     <Compile Include="CodeFirst\Domain\EntityWithTypedId.cs" />
+    <Compile Include="CodeFirst\Domain\Foo.cs" />
     <Compile Include="CodeFirst\Domain\MeteringPoint.cs">
       <SubType>Code</SubType>
     </Compile>

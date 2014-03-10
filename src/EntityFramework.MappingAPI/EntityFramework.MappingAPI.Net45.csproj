@@ -50,6 +50,12 @@
     <OutputPath>bin\NET45_EF6.0.2\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF6</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>efmappingapi.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Debug' ">
       <ItemGroup>
@@ -130,6 +136,9 @@
     <Compile Include="Mappings\EntityMap.cs" />
     <Compile Include="Mappings\PropertyMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="efmappingapi.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
