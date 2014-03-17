@@ -26,6 +26,20 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
             return c;
         }
 
+        public static IPropertyMap FixedLength(this IPropertyMap c, bool fixedLength = true)
+        {
+            string message = string.Format("Property {0} fixedLength flag should be {1}, but was {2}", c.PropertyName, fixedLength, c.FixedLength);
+            Assert.AreEqual(fixedLength, c.FixedLength, message);
+            return c;
+        }
+
+        public static IPropertyMap Unicode(this IPropertyMap c, bool unicode = true)
+        {
+            string message = string.Format("Property {0} unicode flag should be {1}, but was {2}", c.PropertyName, unicode, c.Unicode);
+            Assert.AreEqual(unicode, c.Unicode, message);
+            return c;
+        }
+
         public static IPropertyMap IsNavigationProperty(this IPropertyMap c, bool isNavProp = true)
         {
             string message = string.Format("Property {0} navigationProperty flag should be {1}, but was {2}", c.PropertyName, isNavProp, c.IsNavigationProperty);

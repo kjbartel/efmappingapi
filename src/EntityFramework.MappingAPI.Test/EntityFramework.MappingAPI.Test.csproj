@@ -134,20 +134,25 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Choose>
-    <When Condition=" '$(Configuration)'=='Debug' ">
-      <ItemGroup>
-        <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition=" '$(Configuration)'=='Debug' " >
+		<ItemGroup>
+			<Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+			  <SpecificVersion>False</SpecificVersion>
+			  <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
+			</Reference>
+			<Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+			  <SpecificVersion>False</SpecificVersion>
+			  <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+			</Reference>
+		</ItemGroup>
+	</When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.1.10311' ">
       <ItemGroup>
         <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.1.10331' ">
@@ -156,6 +161,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.1.10715' ">
@@ -164,6 +170,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.2.0' ">
@@ -172,6 +179,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.3.0' ">
@@ -180,6 +188,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.3.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.3.1' ">
@@ -188,6 +197,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF5.0.0' ">
@@ -196,6 +206,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+		<Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF6.0.0' ">
@@ -233,13 +244,15 @@
     </When>
   </Choose>
   <ItemGroup>
+    
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -265,11 +278,50 @@
     <Compile Include="CodeFirst\TestContext.cs" />
     <Compile Include="CodeFirst\TestHelper.cs" />
     <Compile Include="CodeFirst\TphTest.cs" />
+    <Compile Include="DbFirst\Blogs.cs">
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\MappingTest.cs" />
+    <Compile Include="DbFirst\Posts.cs">
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="DbFirst\TestModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DbFirst\TestModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+      <LastGenOutput>TestModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="DbFirst\TestModel.edmx.diagram">
+      <DependentUpon>TestModel.edmx</DependentUpon>
+    </None>
+    <None Include="DbFirst\TestModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+      <LastGenOutput>TestModel.cs</LastGenOutput>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -280,6 +332,9 @@
       <Project>{609BE91A-F11B-49BC-98D9-F7C83517A59E}</Project>
       <Name>EntityFramework.MappingAPI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
