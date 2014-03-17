@@ -49,6 +49,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.0.2|AnyCPU'">
     <OutputPath>bin\NET45_EF6.0.2\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF6</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

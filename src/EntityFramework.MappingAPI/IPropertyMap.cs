@@ -116,6 +116,11 @@ namespace EntityFramework.MappingAPI
         /// </summary>
         IPropertyMap NavigationProperty { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        Delegate Selector { get; set; }
+
         #endregion
     }
 }

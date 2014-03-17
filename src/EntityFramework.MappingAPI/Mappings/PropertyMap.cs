@@ -144,6 +144,11 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// 
         /// </summary>
+        public Delegate Selector { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="property"></param>
         /// <param name="columnName"></param>
         internal PropertyMap(string property, string columnName)

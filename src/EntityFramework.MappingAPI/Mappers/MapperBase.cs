@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+//using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Reflection;
 using EntityFramework.MappingAPI.Exceptions;
@@ -26,7 +28,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// 
         /// </summary>
-        private readonly MetadataWorkspace _metadataWorkspace;
+        protected readonly MetadataWorkspace MetadataWorkspace;
 
         /// <summary>
         /// Table mappings dictionary where key is entity type full name.
@@ -54,7 +56,7 @@ namespace EntityFramework.MappingAPI.Mappers
                 if (_tphData != null)
                     return _tphData;
 
-                var entitySetMaps = (IEnumerable<object>)_metadataWorkspace
+                var entitySetMaps = (IEnumerable<object>)MetadataWorkspace
                     .GetItemCollection(DataSpace.CSSpace)[0]
                     .GetPrivateFieldValue("EntitySetMaps");
 
@@ -143,6 +145,61 @@ namespace EntityFramework.MappingAPI.Mappers
             }
         }
 
+        protected virtual Dictionary<string, EntityType> GetTypeMappingsEf4()
+        {
+            var entityTypes = MetadataWorkspace.GetItems(DataSpace.CSpace).OfType<EntityType>();
+
+            var clrTypes = MetadataWorkspace.GetItems(DataSpace.OSpace)
+                .Select(x => x.ToString())
+                .ToDictionary(x => x.Substring(x.LastIndexOf('.') + 1));
+
+            // can be matched by name because classes with same name from different namespaces can not be used
+            // http://entityframework.codeplex.com/workitem/714
+
+            var typeMappings = new Dictionary<string, EntityType>();
+            foreach (var entityType in entityTypes)
+            {
+                if (entityType.Name == "EdmMetadata")
+                {
+                    continue;
+                }
+
+                var key = clrTypes[entityType.Name];
+                typeMappings[key] = entityType;
+            }
+
+            return typeMappings;
+        }
+
+        protected virtual Dictionary<string, EntityType> GetTypeMappingsEf6()
+        {
+            return MetadataWorkspace.GetItems(DataSpace.OCSpace)
+                    .Select(x => new { identity = x.ToString().Split(':'), edmItem = x.GetPrivateFieldValue("EdmItem") as EntityType })
+                    .Where(x => x.edmItem != null)
+                    .ToDictionary(x => x.identity[0], x => x.edmItem);
+        }
+
+
+        private Dictionary<string, EntityType> _typeMappings;
+        
+        public Dictionary<string, EntityType> TypeMappings
+        {
+            get
+            {
+                if (_typeMappings != null)
+                {
+                    return _typeMappings;
+                }
+
+#if EF6
+                _typeMappings = GetTypeMappingsEf6();
+#else
+                _typeMappings = GetTypeMappingsEf4();
+#endif
+                return _typeMappings;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -150,10 +207,10 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <param name="entityContainer">Code first or DB first entityContainer</param>
         protected MapperBase(MetadataWorkspace metadataWorkspace, EntityContainer entityContainer)
         {
-            _metadataWorkspace = metadataWorkspace;
+            MetadataWorkspace = metadataWorkspace;
             EntityContainer = entityContainer;
 
-            var relations = _metadataWorkspace.GetItems(DataSpace.CSpace).OfType<AssociationType>();
+            var relations = MetadataWorkspace.GetItems(DataSpace.CSpace).OfType<AssociationType>();
 
             foreach (var associationType in relations)
             {
@@ -312,10 +369,7 @@ namespace EntityFramework.MappingAPI.Mappers
             // create discriminators
             foreach (var discriminator in TphData[identity].Discriminators)
             {
-                var propertyMap = entityMap.MapProperty(discriminator.Key, discriminator.Key);
-                propertyMap.DefaultValue = discriminator.Value;
-                propertyMap.IsDiscriminator = true;
-
+                var propertyMap = entityMap.MapDiscriminator(discriminator.Key, discriminator.Value);
                 entityMap.AddDiscriminator(propertyMap);
             }
 
@@ -420,6 +474,22 @@ namespace EntityFramework.MappingAPI.Mappers
             PropertyMap propertyMap;
             try
             {
+                /*
+                var mi = SqlProviderServices.Instance.GetType().GetMethod("GetSqlDbType", BindingFlags.NonPublic | BindingFlags.Static);
+                var parameterInfos = mi.GetParameters();
+
+                var parameters = new List<object>();
+                parameters.Add(edmProperty.TypeUsage);
+                parameters.Add(false);
+                parameters.Add(SqlVersion);
+                parameters.Add(null);
+                parameters.Add(null);
+                parameters.Add(null);
+                parameters.Add(null);
+
+                SqlDbType sqlDbType = (SqlDbType) mi.Invoke(null, parameters.ToArray());
+                */
+
                 propertyMap = entityMap.MapProperty(propName, columnName);
                 propertyMap.EdmProperty = edmProperty;
                 propertyMap.EdmMember = edmMember;

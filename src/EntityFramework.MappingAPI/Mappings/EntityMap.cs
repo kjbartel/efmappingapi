@@ -164,9 +164,33 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <returns></returns>
         public PropertyMap MapProperty(string property, string columnName)
         {
-            var cmap = new PropertyMap(property, columnName) {EntityMap = this};
-            _propertyMaps.Add(property, cmap);
+            var cmap = new PropertyMap(property, columnName) { EntityMap = this };
+            var propNames = property.Split('.');
 
+            var x = Expression.Parameter(Type, "x");
+            Expression propertyExpression = Expression.PropertyOrField(x, propNames[0]);
+            propertyExpression = propNames.Skip(1).Aggregate(propertyExpression, Expression.PropertyOrField);
+
+            var expression = Expression.Lambda(Expression.Convert(propertyExpression, typeof (object)), x);
+            cmap.Type = propertyExpression.Type;
+
+            var selector = expression.Compile();
+            cmap.Selector = selector;
+
+            _propertyMaps.Add(property, cmap);
+            return cmap;
+        }
+
+        public PropertyMap MapDiscriminator(string name, object defaultValue)
+        {
+            var cmap = new PropertyMap(name, name) { EntityMap = this, IsDiscriminator = true, DefaultValue = defaultValue };
+
+            var x = Expression.Parameter(Type, "x");
+            var expression = Expression.Lambda(Expression.Convert(Expression.Constant(defaultValue), typeof(object)), x);
+            var selector = expression.Compile();
+            cmap.Selector = selector;
+
+            _propertyMaps.Add(name, cmap);
             return cmap;
         }
 
