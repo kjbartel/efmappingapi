@@ -112,6 +112,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -135,16 +137,60 @@
     <Compile Include="CodeFirst\TestContext.cs" />
     <Compile Include="CodeFirst\TestHelper.cs" />
     <Compile Include="CodeFirst\TphTest.cs" />
+    <Compile Include="DbFirst\Blogs.cs">
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\MappingTest.cs" />
+    <Compile Include="DbFirst\Posts.cs">
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel.Context1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel.cs" />
+    <Compile Include="DbFirst\TestModel.Designer.cs">
+      <DependentUpon>TestModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbFirst\TestModel1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="DbFirst\TestModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TestModel.Context1.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="DbFirst\TestModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TestModel1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DbFirst\TestModel.edmx.diagram">
+      <DependentUpon>TestModel.edmx</DependentUpon>
+    </None>
+    <None Include="DbFirst\TestModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TestModel1.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EntityFramework.MappingAPI\EntityFramework.MappingAPI.Net45.csproj">
       <Project>{168dd262-c4db-49e8-bf62-bfdd3b6da41e}</Project>
       <Name>EntityFramework.MappingAPI.Net45</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

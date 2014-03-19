@@ -37,10 +37,14 @@
     <OutputPath>bin\NET45_EF5.0.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF5</DefineConstants>
     <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.0.0|AnyCPU'">
     <OutputPath>bin\NET45_EF6.0.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF6</DefineConstants>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.0.1|AnyCPU'">
     <OutputPath>bin\NET45_EF6.0.1\</OutputPath>
