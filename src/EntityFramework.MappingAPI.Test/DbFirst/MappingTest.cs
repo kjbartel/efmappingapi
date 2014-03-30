@@ -19,6 +19,7 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
         [Test]
         public void TableNames()
         {
+
             using (var ctx = GetContext())
             {
                 var sw = new Stopwatch();

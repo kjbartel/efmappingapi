@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #if EF6
@@ -27,6 +28,15 @@ namespace EntityFramework.MappingAPI.Mappers
                 .ToDictionary(x => x.ToString());
 
             return entityTypes;
+        }
+
+        protected override Dictionary<string, TphData> GetTphData()
+        {
+#if EF4 || EF5
+            throw new NotImplementedException("EF4 and EF5 DbFirst is not supported yet");
+#else
+            return base.GetTphData();
+#endif
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿#if EF6
-    using System.Data.Entity.Core.Metadata.Edm;
+﻿using System.Collections.Generic;
+#if EF6
+using System.Data.Entity.Core.Metadata.Edm;
 #else
     using System.Data.Metadata.Edm;
 #endif
