@@ -62,6 +62,15 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>efmappingapi.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.1.0|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\NET45_EF6.1.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET45;EF6</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='Debug' ">
       <ItemGroup>
@@ -112,6 +121,17 @@
         </Reference>
         <Reference Include="EntityFramework.SqlServer">
           <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(Configuration)'=='NET45_EF6.1.0' ">
+      <ItemGroup>
+        <Reference Include="EntityFramework">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+        </Reference>
+        <Reference Include="EntityFramework.SqlServer">
+          <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
         </Reference>
       </ItemGroup>
     </When>

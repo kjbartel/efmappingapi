@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
+//using System.ComponentModel.DataAnnotations;
+//using System.Data;
 //using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Reflection;
@@ -26,7 +26,7 @@ namespace EntityFramework.MappingAPI.Mappers
         protected EntityContainer EntityContainer { get; private set; }
 
         /// <summary>
-        /// 
+        /// The magic box
         /// </summary>
         protected readonly MetadataWorkspace MetadataWorkspace;
 
@@ -43,7 +43,9 @@ namespace EntityFramework.MappingAPI.Mappers
         private readonly Dictionary<string, string[]> _pks = new Dictionary<string, string[]>();
 
         /// <summary>
-        /// 
+        /// Foreign keys map
+        /// Key is fk ref
+        /// Value is pk ref
         /// </summary>
         private readonly Dictionary<EdmMember, EdmMember> _fks = new Dictionary<EdmMember, EdmMember>(); 
 
@@ -64,6 +66,11 @@ namespace EntityFramework.MappingAPI.Mappers
                 var discriminators = new Dictionary<string, object>();
 
                 var typeMappings = (IEnumerable<object>)entitySetMap.GetPrivateFieldValue("TypeMappings");
+
+                // make sure that the baseType appear last in the list
+                typeMappings = typeMappings
+                    .OrderBy(tm => ((IEnumerable<object>)tm.GetPrivateFieldValue("IsOfTypes")).Count());
+
                 foreach (var typeMapping in typeMappings)
                 {
                     var types = (IEnumerable<EdmType>)typeMapping.GetPrivateFieldValue("Types");
@@ -269,7 +276,6 @@ namespace EntityFramework.MappingAPI.Mappers
 
             return entityMap;
         }
-
 
         /// <summary>
         /// 
