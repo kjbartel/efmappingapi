@@ -48,31 +48,42 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// Data type stored in the column
         /// </summary>
-        Type Type { get; set; }
+        Type Type { get; }
 
         /// <summary>
         /// Is table-per-hierarchy discriminator
         /// </summary>
-        bool IsDiscriminator { get; set; }
-
-        byte Precision { get; set; }
-
-        byte Scale { get; set; }
+        bool IsDiscriminator { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        bool Unicode { get; set; }
+        byte Precision { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        bool FixedLength { get; set; }
+        byte Scale { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool Unicode { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool FixedLength { get; }
 
         /// <summary>
         /// Paren entity mapping
         /// </summary>
         IEntityMap EntityMap { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        Delegate Selector { get; }
 
         #region nav property
 
@@ -119,7 +130,12 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// 
         /// </summary>
-        Delegate Selector { get; set; }
+        int? SRID { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool IsStrict { get; }
 
         #endregion
     }

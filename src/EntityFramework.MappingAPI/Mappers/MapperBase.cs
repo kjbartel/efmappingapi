@@ -540,8 +540,22 @@ namespace EntityFramework.MappingAPI.Mappers
 
             foreach (var facet in edmProperty.TypeUsage.Facets)
             {
+                //System.Data.Entity.Core.Common.DbProviderManifest.ScaleFacetName
                 switch (facet.Name)
                 {
+                    case "SRID":
+                        try
+                        {
+                            propertyMap.SRID = (int?)facet.Value;
+                        }
+                        catch
+                        {
+                            // nothing to do
+                        }
+                        break;
+                    case "IsStrict":
+                        propertyMap.IsStrict = (bool)facet.Value;
+                        break;
                     case "Unicode":
                         propertyMap.Unicode = (bool) facet.Value;
                         break;

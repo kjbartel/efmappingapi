@@ -1,4 +1,6 @@
-﻿namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
+﻿using System.Data.Entity.Spatial;
+
+namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
 {
     public class Address
     {
@@ -7,5 +9,7 @@
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string StreetAddress { get; set; }
+
+        public DbGeography Location { get; set; }
     }
 }

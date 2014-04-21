@@ -56,12 +56,12 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <summary>
         /// Data type stored in the column
         /// </summary>
-        public Type Type { get; set; }
+        public Type Type { get; internal set; }
 
         /// <summary>
         /// Is table-per-hierarchy discriminator
         /// </summary>
-        public bool IsDiscriminator { get; set; }
+        public bool IsDiscriminator { get; internal set; }
 
         /// <summary>
         /// Paren table mapping
@@ -104,6 +104,41 @@ namespace EntityFramework.MappingAPI.Mappings
         public IPropertyMap NavigationProperty { get; internal set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool Unicode { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool FixedLength { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte Precision { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte Scale { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? SRID { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsStrict { get; internal set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Delegate Selector { get; internal set; }
+
+        /// <summary>
         /// Edm property from storage entity set (SSpace).
         /// This propery is needed to know which properties are already mapped to TPH entity.
         /// </summary>
@@ -120,31 +155,6 @@ namespace EntityFramework.MappingAPI.Mappings
         /// Stored for linking foreign keys.
         /// </summary>
         internal EdmMember FkTargetEdmMember { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool Unicode { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool FixedLength { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public byte Precision { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public byte Scale { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Delegate Selector { get; set; }
 
         /// <summary>
         /// 

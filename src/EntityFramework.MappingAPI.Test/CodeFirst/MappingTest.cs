@@ -121,6 +121,21 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .IsFk(false)
                     .IsNavigationProperty(false)
                     .MaxLength(NvarcharMax);
+
+                map.Prop(x => x.Contact.Address.Location)
+                    .HasColumnName("Contact_Address_Location")
+                    .IsPk(false)
+                    .IsFk(false)
+                    .IsNavigationProperty(false);
+
+
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).DefaultValue);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).FixedLength);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).MaxLength);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Precision);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Scale);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Type);
+                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Unicode);
             }
         }
 
