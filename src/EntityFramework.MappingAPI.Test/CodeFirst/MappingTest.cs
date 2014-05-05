@@ -172,12 +172,15 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .HasColumnName("Boss_Id")
                     .IsNavigationProperty();
 
-                map.Prop(x => x.RefereeId)
+                var refereeIdProp = map.Prop(x => x.RefereeId);
+                refereeIdProp
                     .IsPk(false)
                     .IsFk()
                     .HasColumnName("RefereeId")
                     .IsNavigationProperty(false)
                     .NavigationPropertyName("Referee");
+
+                
                 
                 map.Prop(x => x.Referee)
                     .HasColumnName("RefereeId")
@@ -186,7 +189,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .IsIdentity(false)
                     .IsNavigationProperty()
                     .ForeignKeyPropertyName("RefereeId")
-                    .ForeignKey(map.Prop(x => x.RefereeId));
+                    .ForeignKey(refereeIdProp);
             }
         }
 
