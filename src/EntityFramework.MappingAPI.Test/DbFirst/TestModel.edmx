@@ -58,7 +58,7 @@
           <Property Name="Url" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Posts" Relationship="Self.FK_dbo_Posts_dbo_Blogs_BlogId" FromRole="Blogs" ToRole="Posts" />
         </EntityType>
-        <EntityType Name="Posts">
+        <EntityType Name="Post">
           <Key>
             <PropertyRef Name="PostId" />
           </Key>
@@ -72,7 +72,7 @@
           <End Role="Blogs" Type="Self.Blogs" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Posts" Type="Self.Posts" Multiplicity="*" />
+          <End Role="Posts" Type="EntityFramework.MapingAPI.Test.DbFirst.TestModel.Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Blogs">
               <PropertyRef Name="BlogId" />
@@ -84,7 +84,7 @@
         </Association>
         <EntityContainer Name="efmapping_testEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Blogs" EntityType="Self.Blogs" />
-          <EntitySet Name="Posts" EntityType="Self.Posts" />
+          <EntitySet Name="Posts" EntityType="EntityFramework.MapingAPI.Test.DbFirst.TestModel.Post" />
           <AssociationSet Name="FK_dbo_Posts_dbo_Blogs_BlogId" Association="Self.FK_dbo_Posts_dbo_Blogs_BlogId">
             <End Role="Blogs" EntitySet="Blogs" />
             <End Role="Posts" EntitySet="Posts" />
@@ -106,7 +106,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Posts">
-            <EntityTypeMapping TypeName="EntityFramework.MapingAPI.Test.DbFirst.TestModel.Posts">
+            <EntityTypeMapping TypeName="EntityFramework.MapingAPI.Test.DbFirst.TestModel.Post">
               <MappingFragment StoreEntitySet="Posts">
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
                 <ScalarProperty Name="Title" ColumnName="Title" />

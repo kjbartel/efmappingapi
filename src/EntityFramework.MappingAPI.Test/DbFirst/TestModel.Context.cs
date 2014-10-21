@@ -26,6 +26,6 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
         }
     
         public virtual DbSet<Blogs> Blogs { get; set; }
-        public virtual DbSet<Posts> Posts { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
     }
 }

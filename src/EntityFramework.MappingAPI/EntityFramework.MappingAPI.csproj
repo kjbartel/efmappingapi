@@ -127,7 +127,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET40_EF6.1.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\NET40_EF6.1.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40;EF6</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;EF6;EF61</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -157,6 +157,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.1.10331' ">
@@ -165,6 +166,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.1.10715' ">
@@ -173,6 +175,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.2.0' ">
@@ -181,6 +184,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.3.0' ">
@@ -189,6 +193,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.3.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF4.3.1' ">
@@ -197,6 +202,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF5.0.0' ">
@@ -205,6 +211,7 @@
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
         </Reference>
+        <Reference Include="System.Data.Entity" />
       </ItemGroup>
     </When>
     <When Condition=" '$(Configuration)'=='NET40_EF6.0.0' ">
@@ -256,7 +263,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -280,6 +286,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="efmappingapi.pfx" />
     <None Include="packages.config" />
   </ItemGroup>

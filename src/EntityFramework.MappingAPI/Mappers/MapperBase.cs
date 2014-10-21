@@ -33,7 +33,7 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// Table mappings dictionary where key is entity type full name.
         /// </summary>
-        private readonly Dictionary<string, EntityMap> _entityMaps = new Dictionary<string, EntityMap>();
+        protected readonly Dictionary<string, EntityMap> _entityMaps = new Dictionary<string, EntityMap>();
 
         /// <summary>
         /// Primary keys of tables.
@@ -190,6 +190,8 @@ namespace EntityFramework.MappingAPI.Mappers
 
         /// <summary>
         /// Type name and Edm.EntityType map for EF6+
+        /// Key is type full name (Also OSpace item fullname and OCSpace identity)
+        /// Value is EntityType from CSpace
         /// </summary>
         /// <returns></returns>
         protected virtual Dictionary<string, EntityType> GetTypeMappingsEf6()
@@ -202,7 +204,13 @@ namespace EntityFramework.MappingAPI.Mappers
 
 
         private Dictionary<string, EntityType> _typeMappings;
-        
+
+        /// <summary>
+        /// Type name and Edm.EntityType map.
+        /// Key is type full name (Also OSpace item fullname).
+        /// Value is EntityType from CSpace.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, EntityType> TypeMappings
         {
             get
@@ -248,9 +256,10 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="typeFullName"></param>
         /// <param name="entitySet"></param>
         /// <returns></returns>
-        protected abstract string GetTableName(EntitySet entitySet);
+        //protected abstract string GetTableName(string typeFullName, EntitySet entitySet);
 
         /// <summary>
         /// 
@@ -293,6 +302,16 @@ namespace EntityFramework.MappingAPI.Mappers
             return null;
         }
 
+        protected class PrepareMappingRes
+        {
+            public string TableName { get; set; }
+            public EntitySet StorageEntitySet { get; set; }
+            public bool IsRoot { get; set; }
+            public EdmType BaseEdmType { get; set; }
+        }
+
+        protected abstract PrepareMappingRes PrepareMapping(string typeFullName, EdmType edmitem);
+
         /// <summary>
         /// 
         /// </summary>
@@ -306,36 +325,16 @@ namespace EntityFramework.MappingAPI.Mappers
                 return null;
             }
 
-            // find existing parent storageEntitySet
-            // thp derived types does not have storageEntitySet
-            EntitySet storageEntitySet;
-            EdmType baseEdmType = edmItem;
-            while (!EntityContainer.TryGetEntitySetByName(baseEdmType.Name, false, out storageEntitySet))
-            {
-                if (baseEdmType.BaseType == null)
-                {
-                    break;
-                }
-                baseEdmType = baseEdmType.BaseType;
-            }
-
-            if (storageEntitySet == null)
+            var temp = PrepareMapping(typeFullName, edmItem);
+            if (temp == null)
             {
                 return null;
             }
+            var storageEntitySet = temp.StorageEntitySet;
+            var tableName = temp.TableName;
+            var isRoot = temp.IsRoot;
+            var baseEdmType = temp.BaseEdmType;
 
-            var isRoot = baseEdmType == edmItem;
-            if (!isRoot)
-            {
-                var parent = _entityMaps.Values.FirstOrDefault(x => x.EdmType == baseEdmType);
-                // parent table has not been mapped yet
-                if (parent == null)
-                {
-                    throw new ParentNotMappedYetException();
-                }
-            }
-
-            string tableName = GetTableName(storageEntitySet);
             string schema = (string)storageEntitySet.MetadataProperties["Schema"].Value;
 
             var entityMap = RegEntity(typeFullName, tableName, schema);

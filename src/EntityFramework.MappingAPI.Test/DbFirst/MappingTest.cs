@@ -37,8 +37,8 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
                 Assert.AreEqual(ctx.Db<Blogs>().TableName, "Blogs");
                 Assert.AreEqual(ctx.Db<Blogs>().Schema, "dbo");
 
-                Assert.AreEqual(ctx.Db<Posts>().TableName, "Posts");
-                Assert.AreEqual(ctx.Db<Posts>().Schema, "dbo");
+                Assert.AreEqual(ctx.Db<Post>().TableName, "Posts");
+                Assert.AreEqual(ctx.Db<Post>().Schema, "dbo");
             }
         }
 
@@ -89,7 +89,7 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
         {
             using (var ctx = GetContext())
             {
-                var map = ctx.Db<Posts>();
+                var map = ctx.Db<Post>();
                 Console.WriteLine("{0}:{1}", map.Type, map.TableName);
 
                 map.Prop(x => x.PostId)

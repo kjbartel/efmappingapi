@@ -24,6 +24,7 @@ namespace EntityFramework.MappingAPI.Mappings
     {
         private readonly Dictionary<string, IEntityMap> _tableMappings = new Dictionary<string, IEntityMap>();
         private readonly string _contextTypeName;
+        private readonly DbContext _context;
 
         /// <summary>
         /// 
@@ -31,6 +32,7 @@ namespace EntityFramework.MappingAPI.Mappings
         /// <param name="context"></param>
         public DbMapping(DbContext context)
         {
+            _context = context;
             _contextTypeName = context.GetType().FullName;
 
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
@@ -131,5 +133,6 @@ namespace EntityFramework.MappingAPI.Mappings
                 return _tableMappings[typeFullName];
             }
         }
+
     }
 }

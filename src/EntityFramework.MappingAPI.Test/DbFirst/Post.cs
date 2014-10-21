@@ -12,7 +12,7 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
     using System;
     using System.Collections.Generic;
     
-    public partial class Posts
+    public partial class Post
     {
         public int PostId { get; set; }
         public string Title { get; set; }

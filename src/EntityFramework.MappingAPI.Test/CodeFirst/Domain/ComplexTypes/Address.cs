@@ -1,4 +1,6 @@
-﻿using System.Data.Entity.Spatial;
+﻿#if EF6
+using System.Data.Entity.Spatial;
+#endif
 
 namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
 {
@@ -10,6 +12,8 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
         public string PostalCode { get; set; }
         public string StreetAddress { get; set; }
 
+#if !NET40
         public DbGeography Location { get; set; }
+#endif
     }
 }
