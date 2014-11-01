@@ -52,7 +52,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.1.0|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\NET45_EF6.1.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET45;EF6</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET45;EF6;EF61</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.1.1|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\NET45_EF6.1.1\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET45;EF6;EF61</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -122,6 +131,17 @@
         </Reference>
       </ItemGroup>
     </When>
+    <When Condition=" '$(Configuration)'=='NET40_EF6.1.1' ">
+      <ItemGroup>
+        <Reference Include="EntityFramework">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+        </Reference>
+        <Reference Include="EntityFramework.SqlServer">
+          <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </When>
   </Choose>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
@@ -161,15 +181,19 @@
       <DependentUpon>TestModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DbFirst\MappingTest.cs" />
-    <Compile Include="DbFirst\Posts.cs">
+    <Compile Include="DbFirst\Post.cs">
       <DependentUpon>TestModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DbFirst\TestModel.Context1.cs">
+    <Compile Include="DbFirst\TestModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TestModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="DbFirst\TestModel.cs" />
+    <Compile Include="DbFirst\TestModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DbFirst\TestModel.Designer.cs">
       <DependentUpon>TestModel.cs</DependentUpon>
     </Compile>
@@ -187,20 +211,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DbFirst\TestModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TestModel.Context1.cs</LastGenOutput>
-    </None>
     <EntityDeploy Include="DbFirst\TestModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TestModel1.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="DbFirst\TestModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+      <LastGenOutput>TestModel.Context.cs</LastGenOutput>
+    </None>
     <None Include="DbFirst\TestModel.edmx.diagram">
       <DependentUpon>TestModel.edmx</DependentUpon>
     </None>
     <None Include="DbFirst\TestModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TestModel1.cs</LastGenOutput>
+      <DependentUpon>TestModel.edmx</DependentUpon>
+      <LastGenOutput>TestModel.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

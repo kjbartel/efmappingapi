@@ -43,6 +43,14 @@ using System.Runtime.InteropServices;
 #endif
 
 #if EF6
-[assembly: AssemblyVersion("6.0.0.7")]
-[assembly: AssemblyFileVersion("6.0.0.7")]
+
+    #if EF61
+
+    [assembly: AssemblyVersion("6.1.0.0")]
+    [assembly: AssemblyFileVersion("6.1.0.0")]
+    #else
+    [assembly: AssemblyVersion("6.0.0.8")]
+    [assembly: AssemblyFileVersion("6.0.0.8")]
+    #endif
+
 #endif

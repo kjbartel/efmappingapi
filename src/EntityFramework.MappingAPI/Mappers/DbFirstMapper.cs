@@ -64,10 +64,6 @@ namespace EntityFramework.MappingAPI.Mappers
         /// <returns></returns>
         protected string GetTableName(string typeFullName)
         {
-            // Get the entity type from the model that maps to the CLR type
-            var entityType = MetadataWorkspace.GetItems<EntityType>(DataSpace.OSpace).Single(e => e.FullName == typeFullName);
-
-
 #if EF6
             // Get the entity type from the model that maps to the CLR type
             var entityType = MetadataWorkspace.GetItems<EntityType>(DataSpace.OSpace).Single(e => e.FullName == typeFullName);
