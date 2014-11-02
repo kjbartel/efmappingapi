@@ -50,6 +50,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         public DbSet<ContractKomb2> K2Contracts { get; set; }
 
         public DbSet<Foo> Foos { get; set; }
+        public DbSet<EntityWithMappedPk> EntityWithMappedPks { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder mb)
         {
@@ -106,6 +107,14 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
             mb.Entity<ContractKomb2>().Property(x => x.Part1Margin).HasPrecision(18, 6);
             mb.Entity<ContractKomb2>().Property(x => x.Part2Margin).HasPrecision(18, 6);
+
+
+            mb.Entity<EntityWithMappedPk>().HasKey(k => k.BancoId);
+
+            mb.Entity<EntityWithMappedPk>().Property(p => p.BancoId).HasColumnName("BancoID").IsRequired().HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            mb.Entity<EntityWithMappedPk>().Property(p => p.Nombre).HasColumnName("Nombre").IsRequired();
+
+            mb.Entity<EntityWithMappedPk>().ToTable("EntityWithMapping");
 
             base.OnModelCreating(mb);
         }

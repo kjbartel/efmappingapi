@@ -531,7 +531,7 @@ namespace EntityFramework.MappingAPI.Mappers
                 throw new Exception(errorMessage, ex);
             }
 
-            if (_pks[entityMap.TableName].Contains(propName))
+            if (_pks[entityMap.TableName].Contains(columnName))
             {
                 propertyMap.IsPk = true;
                 entityMap.AddPk(propertyMap);

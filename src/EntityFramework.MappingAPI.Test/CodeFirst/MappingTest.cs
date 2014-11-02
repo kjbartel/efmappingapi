@@ -54,6 +54,24 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         }
 
         [Test]
+        public void Entity_WithMappedPk()
+        {
+            using (var ctx = GetContext())
+            {
+                var map = ctx.Db<EntityWithMappedPk>();
+                Console.WriteLine("{0}:{1}", map.Type, map.TableName);
+
+                map.Prop(x => x.BancoId)
+                    .HasColumnName("BancoID")
+                    .IsPk()
+                    .IsFk(false)
+                    .IsRequired()
+                    .IsIdentity(false)
+                    .IsNavigationProperty(false);
+            }
+        }
+
+        [Test]
         public void Entity_ComplexType()
         {
             using (var ctx = new TestContext())

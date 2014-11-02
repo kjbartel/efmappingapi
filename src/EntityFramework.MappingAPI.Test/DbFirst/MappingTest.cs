@@ -133,5 +133,8 @@ namespace EntityFramework.MappingAPI.Test.DbFirst
                     .ForeignKeyPropertyName("BlogId");
             }
         }
+
+
     }
+
 }
