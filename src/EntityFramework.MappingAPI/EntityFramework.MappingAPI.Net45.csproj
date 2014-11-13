@@ -144,7 +144,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(Configuration)'=='NET40_EF6.1.1' ">
+    <When Condition=" '$(Configuration)'=='NET45_EF6.1.1' ">
       <ItemGroup>
         <Reference Include="EntityFramework">
           <SpecificVersion>False</SpecificVersion>

@@ -253,13 +253,15 @@ namespace EntityFramework.MappingAPI.Mappers
             }
         }
 
+        /*
         /// <summary>
         /// 
         /// </summary>
         /// <param name="typeFullName"></param>
         /// <param name="entitySet"></param>
         /// <returns></returns>
-        //protected abstract string GetTableName(string typeFullName, EntitySet entitySet);
+        protected abstract string GetTableName(string typeFullName, EntitySet entitySet);
+        */
 
         /// <summary>
         /// 

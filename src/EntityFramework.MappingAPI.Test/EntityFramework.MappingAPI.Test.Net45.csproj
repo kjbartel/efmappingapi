@@ -131,7 +131,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition=" '$(Configuration)'=='NET40_EF6.1.1' ">
+    <When Condition=" '$(Configuration)'=='NET45_EF6.1.1' ">
       <ItemGroup>
         <Reference Include="EntityFramework">
           <SpecificVersion>False</SpecificVersion>
@@ -166,6 +166,7 @@
     <Compile Include="CodeFirst\Domain\Contract.cs" />
     <Compile Include="CodeFirst\Domain\Employee.cs" />
     <Compile Include="CodeFirst\Domain\Entity.cs" />
+    <Compile Include="CodeFirst\Domain\EntityWithMappedPk.cs" />
     <Compile Include="CodeFirst\Domain\EntityWithTypedId.cs" />
     <Compile Include="CodeFirst\Domain\Foo.cs" />
     <Compile Include="CodeFirst\Domain\MeteringPoint.cs" />

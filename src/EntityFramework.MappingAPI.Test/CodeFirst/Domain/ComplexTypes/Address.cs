@@ -1,6 +1,9 @@
 ﻿#if EF6
 using System.Data.Entity.Spatial;
 #endif
+#if EF5
+using System.Data.Spatial;
+#endif
 
 namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
 {
