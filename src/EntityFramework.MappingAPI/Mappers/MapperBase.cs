@@ -555,13 +555,13 @@ namespace EntityFramework.MappingAPI.Mappers
                         }
                         break;
                     case "IsStrict":
-                        propertyMap.IsStrict = (bool)facet.Value;
+                        propertyMap.IsStrict = facet.Value != null && (bool)facet.Value;
                         break;
                     case "Unicode":
-                        propertyMap.Unicode = (bool) facet.Value;
+                        propertyMap.Unicode = facet.Value != null && (bool)facet.Value;
                         break;
                     case "FixedLength":
-                        propertyMap.FixedLength = (bool)facet.Value;
+                        propertyMap.FixedLength = facet.Value != null && (bool)facet.Value;
                         break;
                     case "Precision":
                         propertyMap.Precision = (byte)facet.Value;
@@ -580,18 +580,22 @@ namespace EntityFramework.MappingAPI.Mappers
                         propertyMap.Computed = (StoreGeneratedPattern)facet.Value == StoreGeneratedPattern.Computed;
                         break;
                     case "MaxLength":
-
-                        try
+                        if (facet.Value == null)
                         {
-                            propertyMap.MaxLength = (int)facet.Value;
+                            propertyMap.MaxLength = int.MaxValue;
                         }
-                        catch (Exception)
+                        else
                         {
-                            var stringVal = facet.Value.ToString();
-                            if (stringVal == "Max")
-                                propertyMap.MaxLength = int.MaxValue;
-                            else
-                                throw;
+                            int result;
+                            var val = facet.Value.ToString();
+                            if (!Int32.TryParse(val, out result))
+                            {
+                                if (val == "Max")
+                                {
+                                    propertyMap.MaxLength = int.MaxValue;
+                                }
+                            }
+                            propertyMap.MaxLength = result;
                         }
                         break;
                 }
