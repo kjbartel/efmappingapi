@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using EntityFramework.MappingAPI.Mappings;
 
+#if EF6
+using System.Data.Entity.Infrastructure;
+#endif
+
 namespace EntityFramework.MappingAPI
 {
     /// <summary>
@@ -13,7 +17,7 @@ namespace EntityFramework.MappingAPI
         /// <summary>
         /// 
         /// </summary>
-        private static readonly Dictionary<Type, DbMapping> Mappings = new Dictionary<Type, DbMapping>();
+        private static readonly Dictionary<string, DbMapping> Mappings = new Dictionary<string, DbMapping>();
 
         /// <summary>
         /// 
@@ -51,16 +55,24 @@ namespace EntityFramework.MappingAPI
         /// <returns></returns>
         public static DbMapping Get(DbContext context)
         {
-            var contextType = context.GetType();
-            if (Mappings.ContainsKey(contextType))
+            var cackeKey = context.GetType().FullName;
+#if EF6
+            var iDbModelCacheKeyProvider = context as IDbModelCacheKeyProvider;
+            if (iDbModelCacheKeyProvider != null)
             {
-                return Mappings[contextType];
+                cackeKey = iDbModelCacheKeyProvider.CacheKey;
+            }
+#endif
+
+            if (Mappings.ContainsKey(cackeKey))
+            {
+                return Mappings[cackeKey];
             }
 
             var mapping = new DbMapping(context);
             //var mapping = Map(context);
 
-            Mappings[contextType] = mapping;
+            Mappings[cackeKey] = mapping;
             return mapping;
         }
     }
