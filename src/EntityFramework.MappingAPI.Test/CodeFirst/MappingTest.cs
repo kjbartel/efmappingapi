@@ -23,7 +23,8 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
 
                 foreach (var tableMapping in dbmapping)
                 {
-                    Console.WriteLine("{0}: {1}.{2}", tableMapping.Type.FullName, tableMapping.Schema, tableMapping.TableName);
+                    Console.WriteLine("{0}: {1}.{2}", tableMapping.Type.FullName, tableMapping.Schema,
+                        tableMapping.TableName);
                 }
 
                 Assert.AreEqual(ctx.Db<Page>().TableName, "Pages");
@@ -140,20 +141,51 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
                     .IsNavigationProperty(false)
                     .MaxLength(NvarcharMax);
 #if !NET40
-                map.Prop(x => x.Contact.Address.Location)
+                var propertyPropertyMap = map.Prop(x => x.Contact.Address.Location);
+                propertyPropertyMap
                     .HasColumnName("Contact_Address_Location")
                     .IsPk(false)
                     .IsFk(false)
                     .IsNavigationProperty(false);
 
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).DefaultValue);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).FixedLength);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).MaxLength);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Precision);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Scale);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Type);
-                Console.WriteLine(map.Prop(x => x.Contact.Address.Location).Unicode);
+                Console.WriteLine(propertyPropertyMap.DefaultValue);
+                Console.WriteLine(propertyPropertyMap.FixedLength);
+                Console.WriteLine(propertyPropertyMap.MaxLength);
+                Console.WriteLine(propertyPropertyMap.Precision);
+                Console.WriteLine(propertyPropertyMap.Scale);
+                Console.WriteLine(propertyPropertyMap.Type);
+                Console.WriteLine(propertyPropertyMap.Unicode);
+
+                var shapePropertyMap = map.Prop(x => x.Contact.Address.Shape);
+                shapePropertyMap
+                    .HasColumnName("Contact_Address_Shape")
+                    .IsPk(false)
+                    .IsFk(false)
+                    .IsNavigationProperty(false);
+
+                Console.WriteLine(shapePropertyMap.DefaultValue);
+                Console.WriteLine(shapePropertyMap.FixedLength);
+                Console.WriteLine(shapePropertyMap.MaxLength);
+                Console.WriteLine(shapePropertyMap.Precision);
+                Console.WriteLine(shapePropertyMap.Scale);
+                Console.WriteLine(shapePropertyMap.Type);
+                Console.WriteLine(shapePropertyMap.Unicode);
 #endif
+            }
+        }
+
+        [Test]
+        public void Entity_ComplextType_WhereComplexTypeIsLastProperty()
+        {
+            using (var ctx = new TestContext())
+            {
+                var map = ctx.Db<House>();
+
+                map.Prop(x => x.Name)
+                    .HasColumnName("Name");
+
+                map.Prop(x => x.Address.City)
+                    .HasColumnName("Address_City");
             }
         }
 

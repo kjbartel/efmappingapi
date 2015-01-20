@@ -36,6 +36,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF5.0.0|AnyCPU'">
     <OutputPath>bin\NET45_EF5.0.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45;EF5</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NET45_EF6.0.0|AnyCPU'">
     <OutputPath>bin\NET45_EF6.0.0\</OutputPath>
@@ -169,6 +171,7 @@
     <Compile Include="CodeFirst\Domain\EntityWithMappedPk.cs" />
     <Compile Include="CodeFirst\Domain\EntityWithTypedId.cs" />
     <Compile Include="CodeFirst\Domain\Foo.cs" />
+    <Compile Include="CodeFirst\Domain\House.cs" />
     <Compile Include="CodeFirst\Domain\MeteringPoint.cs" />
     <Compile Include="CodeFirst\Domain\Page.cs" />
     <Compile Include="CodeFirst\Domain\PageTranslations.cs" />

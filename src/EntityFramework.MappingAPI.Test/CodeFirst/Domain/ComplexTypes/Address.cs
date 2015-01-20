@@ -17,6 +17,7 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst.Domain.ComplexTypes
 
 #if !NET40
         public DbGeography Location { get; set; }
+        public DbGeometry Shape { get; set; }
 #endif
     }
 }

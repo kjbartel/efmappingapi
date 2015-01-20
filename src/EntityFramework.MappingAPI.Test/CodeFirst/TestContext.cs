@@ -52,6 +52,8 @@ namespace EntityFramework.MappingAPI.Test.CodeFirst
         public DbSet<Foo> Foos { get; set; }
         public DbSet<EntityWithMappedPk> EntityWithMappedPks { get; set; }
 
+        public DbSet<House> Houses { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder mb)
         {
             mb.ComplexType<Contact>();
